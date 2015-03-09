@@ -1,0 +1,66 @@
+CFile(fileName, classes, main) ::= <<
+#include \<stdio.h>
+#include \<stdlib.h>
+
+typedef struct {
+    char *name;
+    int size;
+    void (*(*_vtable)[])();
+} metadata;
+
+typedef struct {
+    metadata *clazz;
+} object;
+
+object *alloc(metadata *clazz) {
+    object *p = malloc(clazz->size);
+    p->clazz = clazz;
+    return p;
+}
+
+<classes>
+
+<main>
+>>
+
+ClassDef(class, fields, methods, vtable) ::= <<
+>>
+
+MethodDef(m,funcName,returnType,args,body) ::= <<
+>>
+
+MainMethod(main,funcName,returnType,args,body) ::= <<
+>>
+
+Block(block, locals, instrs) ::= <<
+>>
+
+VarDef(var, type)   ::= ""
+
+FuncName(f)         ::= ""
+
+ObjectTypeSpec(o)   ::= ""
+PrimitiveTypeSpec(p)::= "<p.name>"
+
+AssignStat(a,left,right) ::= ";"
+PrintStringStat(p)  ::= ""
+PrintStat(p,args)   ::= ""
+CallStat(c,call)    ::= ""
+CtorCall(ctor)      ::= ""
+ReturnStat(r,expr)  ::= ""
+WhileStat(w,condition, stat) ::= ""
+IfStat(i,condition, stat) ::= ""
+IfElseStat(i,condition, stat, elseStat) ::= <<
+>>
+
+NullRef(n)          ::= "NULL"
+
+LiteralRef(lit)     ::= ""
+VarRef(v)           ::= ""
+FieldRef(f, object) ::= ""
+ThisRef(t)          ::= "this"
+MethodCall(m, receiver, receiverType, fptrType, args) ::= <<
+>>
+
+FuncPtrType(f, returnType, argTypes) ::= ""
+TypeCast(cast, type, expr) ::= ""
