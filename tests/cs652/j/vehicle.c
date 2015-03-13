@@ -95,9 +95,12 @@ metadata Truck_metadata = {"Truck", sizeof(Truck), &Truck_vtable};
 
 int main(int argc, char *argv[])
 {
+    Vehicle * v;
     Truck * t;
 
     t = ((Truck *)alloc(&Truck_metadata));
+    v = ((Vehicle *)t);
     (*(void (*)(Truck *))(*(t)->clazz->_vtable)[Truck_start_SLOT])(((Truck *)t));
     (*(void (*)(Truck *,int))(*(t)->clazz->_vtable)[Truck_setPayload_SLOT])(((Truck *)t),32);
+    (*(void (*)(Vehicle *))(*(v)->clazz->_vtable)[Vehicle_start_SLOT])(((Vehicle *)v));
 }
