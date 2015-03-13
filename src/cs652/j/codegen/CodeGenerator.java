@@ -34,7 +34,6 @@ import cs652.j.parser.JParser;
 import cs652.j.semantics.JClass;
 import cs652.j.semantics.JField;
 import cs652.j.semantics.JMethod;
-import cs652.j.semantics.JObjectType;
 import org.antlr.symbols.MethodSymbol;
 import org.antlr.symbols.Scope;
 import org.antlr.symbols.Symbol;

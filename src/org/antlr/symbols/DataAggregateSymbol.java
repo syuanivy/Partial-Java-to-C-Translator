@@ -10,7 +10,7 @@ import java.util.List;
  *  and methods with different slot sequences. A DataAggregateSymbol
  *  can also be a member of an aggregate itself (nested structs, ...).
  */
-public class DataAggregateSymbol extends SymbolWithScope implements MemberSymbol {
+public class DataAggregateSymbol extends SymbolWithScope implements MemberSymbol, Type {
 	protected ParserRuleContext tree;
 	protected int nextFreeFieldSlot = 0;  // next slot to allocate
 
