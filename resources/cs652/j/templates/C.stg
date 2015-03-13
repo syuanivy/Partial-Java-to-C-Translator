@@ -1,4 +1,5 @@
 CFile(f, classes, main) ::= <<
+// This is generated file <f.name>
 #include \<stdio.h>
 #include \<stdlib.h>
 
