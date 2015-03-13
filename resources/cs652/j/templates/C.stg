@@ -1,4 +1,4 @@
-CFile(fileName, classes, main) ::= <<
+CFile(f, classes, main) ::= <<
 #include \<stdio.h>
 #include \<stdlib.h>
 
