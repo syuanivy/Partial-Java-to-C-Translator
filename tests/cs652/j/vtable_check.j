@@ -1,6 +1,6 @@
 class Animal {
-    int getID() { return 1; }
     int foo() { return getID(); }
+    int getID() { return 1; }
 }
 
 class Dog extends Animal {

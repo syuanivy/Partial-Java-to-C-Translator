@@ -24,22 +24,22 @@ typedef struct {
     metadata *clazz;
 } Animal;
 
-#define Animal_getID_SLOT 0
-#define Animal_foo_SLOT 1
+#define Animal_foo_SLOT 0
+#define Animal_getID_SLOT 1
 
 
-int Animal_getID(Animal *this)
-{
-    return 1;
-}
 int Animal_foo(Animal *this)
 {
     return (*(int (*)(Animal *))(*(this)->clazz->_vtable)[Animal_getID_SLOT])(((Animal *)this));
 }
+int Animal_getID(Animal *this)
+{
+    return 1;
+}
 
 void (*Animal_vtable[])() = {
-    (void (*)())&Animal_getID,
-    (void (*)())&Animal_foo
+    (void (*)())&Animal_foo,
+    (void (*)())&Animal_getID
 };
 
 metadata Animal_metadata = {"Animal", sizeof(Animal), &Animal_vtable};
@@ -49,8 +49,8 @@ typedef struct {
     metadata *clazz;
 } Dog;
 
-#define Dog_getID_SLOT 0
-#define Dog_foo_SLOT 1
+#define Dog_foo_SLOT 0
+#define Dog_getID_SLOT 1
 
 
 int Dog_getID(Dog *this)
@@ -59,8 +59,8 @@ int Dog_getID(Dog *this)
 }
 
 void (*Dog_vtable[])() = {
-    (void (*)())&Dog_getID,
-    (void (*)())&Animal_foo
+    (void (*)())&Animal_foo,
+    (void (*)())&Dog_getID
 };
 
 metadata Dog_metadata = {"Dog", sizeof(Dog), &Dog_vtable};
@@ -70,8 +70,8 @@ typedef struct {
     metadata *clazz;
 } Pekinese;
 
-#define Pekinese_getID_SLOT 0
-#define Pekinese_foo_SLOT 1
+#define Pekinese_foo_SLOT 0
+#define Pekinese_getID_SLOT 1
 
 
 int Pekinese_getID(Pekinese *this)
@@ -80,8 +80,8 @@ int Pekinese_getID(Pekinese *this)
 }
 
 void (*Pekinese_vtable[])() = {
-    (void (*)())&Pekinese_getID,
-    (void (*)())&Animal_foo
+    (void (*)())&Animal_foo,
+    (void (*)())&Pekinese_getID
 };
 
 metadata Pekinese_metadata = {"Pekinese", sizeof(Pekinese), &Pekinese_vtable};

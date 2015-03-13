@@ -10,3 +10,8 @@ class Truck extends Vehicle {
     void start() { }
     void setPayload(int n) { }
 }
+
+Truck t;
+t = new Truck();
+t.start();
+t.setPayload(32);
