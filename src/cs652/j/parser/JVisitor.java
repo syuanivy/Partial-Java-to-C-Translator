@@ -1,8 +1,8 @@
 // Generated from /Users/Shuai/Dropbox/cs652/syuanivy-vtable/src/cs652/j/parser/J.g4 by ANTLR 4.5
 
 package cs652.j.parser;
-import cs652.j.semantics.*; // You will need these for stuff in "returns" clauses
 import org.antlr.symbols.*;
+import cs652.j.semantics.*; // You will need these for stuff in "returns" clauses
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -28,9 +28,147 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassDeclaration(@NotNull JParser.ClassDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JParser#classBody}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassBody(@NotNull JParser.ClassBodyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#classBodyDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassBodyDeclaration(@NotNull JParser.ClassBodyDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#memberDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMemberDeclaration(@NotNull JParser.MemberDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#methodDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#methodBody}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodBody(@NotNull JParser.MethodBodyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlock(@NotNull JParser.BlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#blockStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlockStatement(@NotNull JParser.BlockStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#formalParameters}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormalParameters(@NotNull JParser.FormalParametersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#formalParameterList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormalParameterList(@NotNull JParser.FormalParameterListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#formalParameter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormalParameter(@NotNull JParser.FormalParameterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#variableDeclaratorId}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableDeclaratorId(@NotNull JParser.VariableDeclaratorIdContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JParser#main}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitMain(@NotNull JParser.MainContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#variableDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableDeclaration(@NotNull JParser.VariableDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#fieldDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFieldDeclaration(@NotNull JParser.FieldDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitType(@NotNull JParser.TypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#classOrInterfaceType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassOrInterfaceType(@NotNull JParser.ClassOrInterfaceTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatement(@NotNull JParser.StatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#statementExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#parExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParExpression(@NotNull JParser.ParExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpression(@NotNull JParser.ExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#expressionList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionList(@NotNull JParser.ExpressionListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#primary}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrimary(@NotNull JParser.PrimaryContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLiteral(@NotNull JParser.LiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#primitiveType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrimitiveType(@NotNull JParser.PrimitiveTypeContext ctx);
 }

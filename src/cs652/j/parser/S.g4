@@ -1,20 +1,25 @@
-grammar J;
+grammar S;
 
 @header {
 package cs652.j.parser;
-import org.antlr.symbols.*;
 import cs652.j.semantics.*; // You will need these for stuff in "returns" clauses
+import org.antlr.symbols.*;
 }
 
 file returns [GlobalScope scope]
-    :   classDeclaration* main EOF
-    ;
+    : classDeclaration* main EOF;
 
-classDeclaration returns [JClass scope]
+classDeclaration
     :   'class' Identifier
         ('extends' type)?
         classBody
     ;
+
+
+main
+    :blockStatement*;
+
+
 
 classBody
     :   '{' classBodyDeclaration* '}'
@@ -30,24 +35,15 @@ memberDeclaration
     |   fieldDeclaration
     ;
 
-methodDeclaration returns [JMethod scope]
+methodDeclaration
     :   (type|'void') Identifier formalParameters
         (   methodBody
         |   ';'
         )
     ;
 
-methodBody
-    :   block
-    ;
-
-block returns [LocalScope scope]
-    :   '{' blockStatement* '}'
-    ;
-
-blockStatement
-    :   variableDeclaration
-    |   statement
+fieldDeclaration
+    :   type Identifier ';'
     ;
 
 formalParameters
@@ -66,25 +62,24 @@ variableDeclaratorId
     :   Identifier
     ;
 
-main
-    :   blockStatement*
+methodBody
+    :   block
+    ;
+
+
+// STATEMENTS / BLOCKS
+
+block
+    :   '{' blockStatement* '}'
+    ;
+
+blockStatement
+    :   variableDeclaration
+    |   statement
     ;
 
 variableDeclaration
-    :   type Identifier ';'
-    ;
-
-fieldDeclaration
-    :   type Identifier ';'
-    ;
-
-type
-    :   classOrInterfaceType
-    |   primitiveType
-    ;
-
-classOrInterfaceType
-    :   Identifier
+    :    type Identifier ';'
     ;
 
 statement
@@ -120,60 +115,64 @@ primary
     :   'this'
     |   literal
     |   Identifier
+    |   primitiveType
     ;
 
-literal
-    :   IntegerLiteral
-    |   FloatingPointLiteral
-    |   StringLiteral
-    |   'null'
+creator
+    : type '()';
+
+type
+    :   classType
+    |   primitiveType
+    ;
+
+classType
+    :   Identifier
     ;
 
 primitiveType
     :   'int'
     |   'float'
     ;
-
-StringLiteral
-    :   '"' StringCharacters? '"'
+literal
+    :   IntegerLiteral
+    |   FloatPointLiteral
+    |   StringLiteral
+    |   'null'
     ;
 
+//LEXER
+// §3.9 Keywords
+
+CLASS         : 'class';
+ELSE          : 'else';
+EXTENDS       : 'extends';
+FLOAT         : 'float';
+IF            : 'if';
+INT           : 'int';
+NEW           : 'new';
+RETURN        : 'return';
+THIS          : 'this';
+VOID          : 'void';
+WHILE         : 'while';
+
+
+
+// §3.10.1 Integer Literals
 
 IntegerLiteral
     :   DecimalIntegerLiteral
     ;
 
+fragment
 DecimalIntegerLiteral
     :   DecimalNumeral
-    ;
-
-FloatingPointLiteral
-    :   DecimalFloatingPointLiteral
-    ;
-
-fragment
-StringCharacters
-    :   StringCharacter+
-    ;
-fragment
-StringCharacter
-    :   ~["]
-    ;
-
-fragment
-DecimalFloatingPointLiteral
-    :   DecimalNumeral '.' Digits
     ;
 
 fragment
 DecimalNumeral
     :   '0'
     |   NonZeroDigit Digits?
-    ;
-
-fragment
-NonZeroDigit
-    :   [1-9]
     ;
 
 fragment
@@ -187,6 +186,55 @@ Digit
     |   NonZeroDigit
     ;
 
+fragment
+NonZeroDigit
+    :   [1-9]
+    ;
+
+
+// §3.10.2 Floating-Point Literals
+
+FloatPointLiteral
+    :   IntegerLiteral '.' Digits
+    ;
+
+// §3.10.5 String Literals
+StringLiteral
+    :   '"' StringCharacters? '"'
+    ;
+fragment
+StringCharacters
+    :   StringCharacter+
+    ;
+fragment
+StringCharacter
+    :   ~["]  // how is that allowing one escape?
+    ;
+
+
+// §3.10.7 The Null Literal
+
+NullLiteral
+    :   'null'
+    ;
+
+// §3.11 Separators
+
+LPAREN          : '(';
+RPAREN          : ')';
+LBRACE          : '{';
+RBRACE          : '}';
+SEMI            : ';';
+COMMA           : ',';
+DOT             : '.';
+
+// §3.12 Operators
+
+ASSIGN          : '=';
+
+
+// §3.8 Identifiers (must appear after all keywords in the grammar)
+
 Identifier
     :   JavaLetter JavaLetterOrDigit*
     ;
@@ -194,18 +242,14 @@ Identifier
 fragment
 JavaLetter
     :   [a-zA-Z$_] // these are the "java letters" below 0xFF
+    | '_'
     ;
 
 fragment
 JavaLetterOrDigit
     :   [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
-    |   // covers all characters above 0xFF which are not a surrogate
-        ~[\u0000-\u00FF\uD800-\uDBFF]
-        {Character.isJavaIdentifierPart(_input.LA(-1))}?
-    |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
-        [\uD800-\uDBFF] [\uDC00-\uDFFF]
-        {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
-    ;
+    |   '_';
+
 
 COMMENT : '/*' .*? '*/' -> channel(HIDDEN) ;
 LINE_COMMENT : '//' ~'\n'* '\n' -> channel(HIDDEN) ;
