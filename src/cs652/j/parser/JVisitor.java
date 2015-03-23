@@ -1,8 +1,8 @@
 // Generated from /Users/Shuai/Dropbox/cs652/syuanivy-vtable/src/cs652/j/parser/J.g4 by ANTLR 4.5
 
 package cs652.j.parser;
-import org.antlr.symbols.*;
 import cs652.j.semantics.*; // You will need these for stuff in "returns" clauses
+import org.antlr.symbols.*;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -28,6 +28,30 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassDeclaration(@NotNull JParser.ClassDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JParser#main}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMain(@NotNull JParser.MainContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitType(@NotNull JParser.TypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#classType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitClassType(@NotNull JParser.ClassTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#primitiveType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrimitiveType(@NotNull JParser.PrimitiveTypeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JParser#classBody}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -46,29 +70,23 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMemberDeclaration(@NotNull JParser.MemberDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JParser#fieldDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFieldDeclaration(@NotNull JParser.FieldDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#variableDeclarator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableDeclarator(@NotNull JParser.VariableDeclaratorContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JParser#methodDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JParser#methodBody}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMethodBody(@NotNull JParser.MethodBodyContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JParser#block}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBlock(@NotNull JParser.BlockContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JParser#blockStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBlockStatement(@NotNull JParser.BlockStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JParser#formalParameters}.
 	 * @param ctx the parse tree
@@ -88,41 +106,35 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFormalParameter(@NotNull JParser.FormalParameterContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JParser#variableDeclaratorId}.
+	 * Visit a parse tree produced by {@link JParser#methodBody}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableDeclaratorId(@NotNull JParser.VariableDeclaratorIdContext ctx);
+	T visitMethodBody(@NotNull JParser.MethodBodyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JParser#main}.
+	 * Visit a parse tree produced by {@link JParser#block}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMain(@NotNull JParser.MainContext ctx);
+	T visitBlock(@NotNull JParser.BlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JParser#variableDeclaration}.
+	 * Visit a parse tree produced by {@link JParser#blockStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitVariableDeclaration(@NotNull JParser.VariableDeclarationContext ctx);
+	T visitBlockStatement(@NotNull JParser.BlockStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JParser#fieldDeclaration}.
+	 * Visit a parse tree produced by {@link JParser#localVariableDeclarationStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFieldDeclaration(@NotNull JParser.FieldDeclarationContext ctx);
+	T visitLocalVariableDeclarationStatement(@NotNull JParser.LocalVariableDeclarationStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JParser#type}.
+	 * Visit a parse tree produced by {@link JParser#localVariableDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitType(@NotNull JParser.TypeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JParser#classOrInterfaceType}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClassOrInterfaceType(@NotNull JParser.ClassOrInterfaceTypeContext ctx);
+	T visitLocalVariableDeclaration(@NotNull JParser.LocalVariableDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JParser#statement}.
 	 * @param ctx the parse tree
@@ -130,17 +142,17 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(@NotNull JParser.StatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JParser#statementExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link JParser#parExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitParExpression(@NotNull JParser.ParExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JParser#statementExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JParser#expression}.
 	 * @param ctx the parse tree
@@ -160,15 +172,15 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrimary(@NotNull JParser.PrimaryContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JParser#creator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCreator(@NotNull JParser.CreatorContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JParser#literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitLiteral(@NotNull JParser.LiteralContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JParser#primitiveType}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPrimitiveType(@NotNull JParser.PrimitiveTypeContext ctx);
 }

@@ -2,13 +2,13 @@ grammar J;
 
 @header {
 package cs652.j.parser;
-import org.antlr.symbols.*;
 import cs652.j.semantics.*; // You will need these for stuff in "returns" clauses
+import org.antlr.symbols.*;
 }
 
+// file: classDeclaration, main
 file returns [GlobalScope scope]
-    :   classDeclaration* main EOF
-    ;
+    : classDeclaration* main EOF;
 
 classDeclaration returns [JClass scope]
     :   'class' Identifier
@@ -16,6 +16,26 @@ classDeclaration returns [JClass scope]
         classBody
     ;
 
+main
+    :blockStatement*
+    ;
+
+//classDeclaration: type, classBody
+//type: classType and primitiveType
+type
+    :   classType
+    |   primitiveType
+    ;
+
+classType
+    :   Identifier
+    ;
+
+primitiveType
+    :   'int'
+    |   'float'
+    ;
+//classBody: classBodyDeclaration*: ; or memberDeclaration( field or method)
 classBody
     :   '{' classBodyDeclaration* '}'
     ;
@@ -26,67 +46,60 @@ classBodyDeclaration
     ;
 
 memberDeclaration
-    :   methodDeclaration
-    |   fieldDeclaration
+    :   fieldDeclaration
+    |   methodDeclaration
+    ;
+//field
+fieldDeclaration
+    :   type variableDeclarator ';'
     ;
 
-methodDeclaration returns [JMethod scope]
+variableDeclarator
+    :   Identifier
+    ;
+//method
+methodDeclaration
     :   (type|'void') Identifier formalParameters
         (   methodBody
         |   ';'
         )
     ;
+//parameters
+formalParameters
+    : '(' formalParameterList? ')'
+    ;
 
+formalParameterList
+    :  formalParameter (',' formalParameter)*
+    ;
+
+formalParameter
+    :   type variableDeclarator
+    ;
+//methodBody
 methodBody
     :   block
     ;
 
-block returns [LocalScope scope]
+// STATEMENTS / BLOCKS
+
+block
     :   '{' blockStatement* '}'
     ;
-
+//blockStatement: localVar Declaration statement, or other statement
 blockStatement
-    :   variableDeclaration
+    :   localVariableDeclarationStatement
     |   statement
     ;
 
-formalParameters
-    :   '(' formalParameterList? ')'
+localVariableDeclarationStatement
+    :    localVariableDeclaration ';'
     ;
 
-formalParameterList
-    :   formalParameter (',' formalParameter)*
+localVariableDeclaration
+    :   type variableDeclarator
     ;
-
-formalParameter
-    :   type variableDeclaratorId
-    ;
-
-variableDeclaratorId
-    :   Identifier
-    ;
-
-main
-    :   blockStatement*
-    ;
-
-variableDeclaration
-    :   type Identifier ';'
-    ;
-
-fieldDeclaration
-    :   type Identifier ';'
-    ;
-
-type
-    :   classOrInterfaceType
-    |   primitiveType
-    ;
-
-classOrInterfaceType
-    :   Identifier
-    ;
-
+//statement
 statement
     :   block
     |   'if' parExpression statement ('else' statement)?
@@ -96,22 +109,23 @@ statement
     |   statementExpression ';'
     ;
 
-statementExpression
-    :   expression
-    ;
+// EXPRESSIONS
 
 parExpression
     :   '(' expression ')'
     ;
 
+statementExpression
+    :   expression
+    ;
+//expression
 expression returns [Type expressionType]
     :   primary
-    |   dot=expression '.' dotI=Identifier
-    |   method=expression '(' expressionList? ')'
-    |   'new' newI=Identifier '(' ')'
-    |   des=expression '=' src=expression
+    |   dotExpr = expression '.' Identifier
+    |   methodCallExpr = expression '(' expressionList? ')'
+    |   newExpr = 'new' creator
+    |   assignExpr = expression '=' expression
     ;
-
 expressionList
     :   expression (',' expression)*
     ;
@@ -122,58 +136,49 @@ primary
     |   Identifier
     ;
 
+creator
+    : type '('')';
+
+
 literal
     :   IntegerLiteral
-    |   FloatingPointLiteral
+    |   FloatPointLiteral
     |   StringLiteral
     |   'null'
     ;
 
-primitiveType
-    :   'int'
-    |   'float'
-    ;
+//LEXER
+// §3.9 Keywords
 
-StringLiteral
-    :   '"' StringCharacters? '"'
-    ;
+CLASS         : 'class';
+ELSE          : 'else';
+EXTENDS       : 'extends';
+FLOAT         : 'float';
+IF            : 'if';
+INT           : 'int';
+NEW           : 'new';
+RETURN        : 'return';
+THIS          : 'this';
+VOID          : 'void';
+WHILE         : 'while';
 
+
+
+// §3.10.1 Integer Literals
 
 IntegerLiteral
     :   DecimalIntegerLiteral
     ;
 
+fragment
 DecimalIntegerLiteral
     :   DecimalNumeral
-    ;
-
-FloatingPointLiteral
-    :   DecimalFloatingPointLiteral
-    ;
-
-fragment
-StringCharacters
-    :   StringCharacter+
-    ;
-fragment
-StringCharacter
-    :   ~["]
-    ;
-
-fragment
-DecimalFloatingPointLiteral
-    :   DecimalNumeral '.' Digits
     ;
 
 fragment
 DecimalNumeral
     :   '0'
     |   NonZeroDigit Digits?
-    ;
-
-fragment
-NonZeroDigit
-    :   [1-9]
     ;
 
 fragment
@@ -187,6 +192,55 @@ Digit
     |   NonZeroDigit
     ;
 
+fragment
+NonZeroDigit
+    :   [1-9]
+    ;
+
+
+// §3.10.2 Floating-Point Literals
+
+FloatPointLiteral
+    :   IntegerLiteral '.' Digits
+    ;
+
+// §3.10.5 String Literals
+StringLiteral
+    :   '"' StringCharacters? '"'
+    ;
+fragment
+StringCharacters
+    :   StringCharacter+
+    ;
+fragment
+StringCharacter
+    :   ~["]  // how is that allowing one escape?
+    ;
+
+
+// §3.10.7 The Null Literal
+
+NullLiteral
+    :   'null'
+    ;
+
+// §3.11 Separators
+
+LPAREN          : '(';
+RPAREN          : ')';
+LBRACE          : '{';
+RBRACE          : '}';
+SEMI            : ';';
+COMMA           : ',';
+DOT             : '.';
+
+// §3.12 Operators
+
+ASSIGN          : '=';
+
+
+// §3.8 Identifiers (must appear after all keywords in the grammar)
+
 Identifier
     :   JavaLetter JavaLetterOrDigit*
     ;
@@ -194,18 +248,14 @@ Identifier
 fragment
 JavaLetter
     :   [a-zA-Z$_] // these are the "java letters" below 0xFF
+    | '_'
     ;
 
 fragment
 JavaLetterOrDigit
     :   [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
-    |   // covers all characters above 0xFF which are not a surrogate
-        ~[\u0000-\u00FF\uD800-\uDBFF]
-        {Character.isJavaIdentifierPart(_input.LA(-1))}?
-    |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
-        [\uD800-\uDBFF] [\uDC00-\uDFFF]
-        {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
-    ;
+    |   '_';
+
 
 COMMENT : '/*' .*? '*/' -> channel(HIDDEN) ;
 LINE_COMMENT : '//' ~'\n'* '\n' -> channel(HIDDEN) ;

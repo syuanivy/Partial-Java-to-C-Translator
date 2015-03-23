@@ -1,8 +1,8 @@
 // Generated from /Users/Shuai/Dropbox/cs652/syuanivy-vtable/src/cs652/j/parser/J.g4 by ANTLR 4.5
 
 package cs652.j.parser;
-import org.antlr.symbols.*;
 import cs652.j.semantics.*; // You will need these for stuff in "returns" clauses
+import org.antlr.symbols.*;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -32,6 +32,46 @@ public interface JListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClassDeclaration(@NotNull JParser.ClassDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link JParser#main}.
+	 * @param ctx the parse tree
+	 */
+	void enterMain(@NotNull JParser.MainContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JParser#main}.
+	 * @param ctx the parse tree
+	 */
+	void exitMain(@NotNull JParser.MainContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link JParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void enterType(@NotNull JParser.TypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void exitType(@NotNull JParser.TypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link JParser#classType}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassType(@NotNull JParser.ClassTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JParser#classType}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassType(@NotNull JParser.ClassTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link JParser#primitiveType}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrimitiveType(@NotNull JParser.PrimitiveTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JParser#primitiveType}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrimitiveType(@NotNull JParser.PrimitiveTypeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JParser#classBody}.
 	 * @param ctx the parse tree
@@ -63,6 +103,26 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitMemberDeclaration(@NotNull JParser.MemberDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link JParser#fieldDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterFieldDeclaration(@NotNull JParser.FieldDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JParser#fieldDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitFieldDeclaration(@NotNull JParser.FieldDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link JParser#variableDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableDeclarator(@NotNull JParser.VariableDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JParser#variableDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableDeclarator(@NotNull JParser.VariableDeclaratorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link JParser#methodDeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -72,36 +132,6 @@ public interface JListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JParser#methodBody}.
-	 * @param ctx the parse tree
-	 */
-	void enterMethodBody(@NotNull JParser.MethodBodyContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JParser#methodBody}.
-	 * @param ctx the parse tree
-	 */
-	void exitMethodBody(@NotNull JParser.MethodBodyContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JParser#block}.
-	 * @param ctx the parse tree
-	 */
-	void enterBlock(@NotNull JParser.BlockContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JParser#block}.
-	 * @param ctx the parse tree
-	 */
-	void exitBlock(@NotNull JParser.BlockContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JParser#blockStatement}.
-	 * @param ctx the parse tree
-	 */
-	void enterBlockStatement(@NotNull JParser.BlockStatementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JParser#blockStatement}.
-	 * @param ctx the parse tree
-	 */
-	void exitBlockStatement(@NotNull JParser.BlockStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JParser#formalParameters}.
 	 * @param ctx the parse tree
@@ -133,65 +163,55 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitFormalParameter(@NotNull JParser.FormalParameterContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JParser#variableDeclaratorId}.
+	 * Enter a parse tree produced by {@link JParser#methodBody}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableDeclaratorId(@NotNull JParser.VariableDeclaratorIdContext ctx);
+	void enterMethodBody(@NotNull JParser.MethodBodyContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JParser#variableDeclaratorId}.
+	 * Exit a parse tree produced by {@link JParser#methodBody}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableDeclaratorId(@NotNull JParser.VariableDeclaratorIdContext ctx);
+	void exitMethodBody(@NotNull JParser.MethodBodyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JParser#main}.
+	 * Enter a parse tree produced by {@link JParser#block}.
 	 * @param ctx the parse tree
 	 */
-	void enterMain(@NotNull JParser.MainContext ctx);
+	void enterBlock(@NotNull JParser.BlockContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JParser#main}.
+	 * Exit a parse tree produced by {@link JParser#block}.
 	 * @param ctx the parse tree
 	 */
-	void exitMain(@NotNull JParser.MainContext ctx);
+	void exitBlock(@NotNull JParser.BlockContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JParser#variableDeclaration}.
+	 * Enter a parse tree produced by {@link JParser#blockStatement}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariableDeclaration(@NotNull JParser.VariableDeclarationContext ctx);
+	void enterBlockStatement(@NotNull JParser.BlockStatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JParser#variableDeclaration}.
+	 * Exit a parse tree produced by {@link JParser#blockStatement}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariableDeclaration(@NotNull JParser.VariableDeclarationContext ctx);
+	void exitBlockStatement(@NotNull JParser.BlockStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JParser#fieldDeclaration}.
+	 * Enter a parse tree produced by {@link JParser#localVariableDeclarationStatement}.
 	 * @param ctx the parse tree
 	 */
-	void enterFieldDeclaration(@NotNull JParser.FieldDeclarationContext ctx);
+	void enterLocalVariableDeclarationStatement(@NotNull JParser.LocalVariableDeclarationStatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JParser#fieldDeclaration}.
+	 * Exit a parse tree produced by {@link JParser#localVariableDeclarationStatement}.
 	 * @param ctx the parse tree
 	 */
-	void exitFieldDeclaration(@NotNull JParser.FieldDeclarationContext ctx);
+	void exitLocalVariableDeclarationStatement(@NotNull JParser.LocalVariableDeclarationStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JParser#type}.
+	 * Enter a parse tree produced by {@link JParser#localVariableDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterType(@NotNull JParser.TypeContext ctx);
+	void enterLocalVariableDeclaration(@NotNull JParser.LocalVariableDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JParser#type}.
+	 * Exit a parse tree produced by {@link JParser#localVariableDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitType(@NotNull JParser.TypeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JParser#classOrInterfaceType}.
-	 * @param ctx the parse tree
-	 */
-	void enterClassOrInterfaceType(@NotNull JParser.ClassOrInterfaceTypeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JParser#classOrInterfaceType}.
-	 * @param ctx the parse tree
-	 */
-	void exitClassOrInterfaceType(@NotNull JParser.ClassOrInterfaceTypeContext ctx);
+	void exitLocalVariableDeclaration(@NotNull JParser.LocalVariableDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JParser#statement}.
 	 * @param ctx the parse tree
@@ -203,16 +223,6 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitStatement(@NotNull JParser.StatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JParser#statementExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JParser#statementExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link JParser#parExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -222,6 +232,16 @@ public interface JListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParExpression(@NotNull JParser.ParExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link JParser#statementExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JParser#statementExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JParser#expression}.
 	 * @param ctx the parse tree
@@ -253,6 +273,16 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitPrimary(@NotNull JParser.PrimaryContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link JParser#creator}.
+	 * @param ctx the parse tree
+	 */
+	void enterCreator(@NotNull JParser.CreatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JParser#creator}.
+	 * @param ctx the parse tree
+	 */
+	void exitCreator(@NotNull JParser.CreatorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link JParser#literal}.
 	 * @param ctx the parse tree
 	 */
@@ -262,14 +292,4 @@ public interface JListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLiteral(@NotNull JParser.LiteralContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JParser#primitiveType}.
-	 * @param ctx the parse tree
-	 */
-	void enterPrimitiveType(@NotNull JParser.PrimitiveTypeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JParser#primitiveType}.
-	 * @param ctx the parse tree
-	 */
-	void exitPrimitiveType(@NotNull JParser.PrimitiveTypeContext ctx);
 }
