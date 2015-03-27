@@ -33,7 +33,7 @@ public class JTran {
 		boolean gui = false;
 		boolean inspect = false;
 		int i = 0;
-		label:
+		label:  //?
 		while ( true ) {
 			switch ( args[i] ) {
 				case "-o":  // -o output-file
@@ -75,12 +75,13 @@ public class JTran {
 		TokenStream tokens = new CommonTokenStream(l);
 
 		JParser parser = new JParser(tokens);
-//		parser.addErrorListener(new DiagnosticErrorListener());
 		ParserRuleContext tree = parser.file();
 
 		DefineScopesAndSymbols def = new DefineScopesAndSymbols(globals);
 		ParseTreeWalker walker = new ParseTreeWalker();
 		walker.walk(def, tree);
+
+        /*
 
 		ComputeTypes computeTypes = new ComputeTypes(globals);
 		walker = new ParseTreeWalker();
@@ -95,10 +96,13 @@ public class JTran {
 		String C_code = fileST.render();
 		org.antlr.v4.runtime.misc.Utils.writeFile(C_fileName, C_code);
 
+
 		if ( print ) System.out.println(C_code);
 
 		if ( gui ) tree.inspect(parser);
 
 		if ( inspect ) fileST.inspect(); // very useful; pulls up ST debugger
+
+		*/
 	}
 }

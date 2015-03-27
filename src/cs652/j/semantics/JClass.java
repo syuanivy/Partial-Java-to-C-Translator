@@ -17,8 +17,5 @@ public class JClass extends ClassSymbol{
         super(name, tree);
     }
 
-    public Set<MethodSymbol> getVisibleMethods(){return null;}
-    public int getNumberOfVisibleMethods(){return 0;}
-
 }
 

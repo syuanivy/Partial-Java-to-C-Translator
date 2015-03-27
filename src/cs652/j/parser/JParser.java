@@ -726,7 +726,8 @@ public class JParser extends Parser {
 	}
 
 	public static class MethodDeclarationContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JParser.Identifier, 0); }
+		public JMethod scope;
+        public TerminalNode Identifier() { return getToken(JParser.Identifier, 0); }
 		public FormalParametersContext formalParameters() {
 			return getRuleContext(FormalParametersContext.class,0);
 		}
@@ -1028,7 +1029,8 @@ public class JParser extends Parser {
 	}
 
 	public static class BlockContext extends ParserRuleContext {
-		public List<BlockStatementContext> blockStatement() {
+		public LocalScope scope;
+        public List<BlockStatementContext> blockStatement() {
 			return getRuleContexts(BlockStatementContext.class);
 		}
 		public BlockStatementContext blockStatement(int i) {

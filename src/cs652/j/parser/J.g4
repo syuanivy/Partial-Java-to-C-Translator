@@ -34,6 +34,7 @@ classType
 primitiveType
     :   'int'
     |   'float'
+    |   'void'
     ;
 //classBody: classBodyDeclaration*: ; or memberDeclaration( field or method)
 classBody
@@ -59,7 +60,7 @@ variableDeclarator
     ;
 //method
 methodDeclaration
-    :   (type|'void') Identifier formalParameters
+    :   type Identifier formalParameters
         (   methodBody
         |   ';'
         )
