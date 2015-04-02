@@ -136,11 +136,61 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLocalVariableDeclaration(@NotNull JParser.LocalVariableDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JParser#statement}.
+	 * Visit a parse tree produced by the {@code blockStat}
+	 * labeled alternative in {@link JParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatement(@NotNull JParser.StatementContext ctx);
+	T visitBlockStat(@NotNull JParser.BlockStatContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ifStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStat(@NotNull JParser.IfStatContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code whileStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileStat(@NotNull JParser.WhileStatContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code returnStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnStat(@NotNull JParser.ReturnStatContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code emptyStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEmptyStat(@NotNull JParser.EmptyStatContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code printStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrintStat(@NotNull JParser.PrintStatContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code statExpr}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatExpr(@NotNull JParser.StatExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code assignStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignStat(@NotNull JParser.AssignStatContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JParser#parExpression}.
 	 * @param ctx the parse tree

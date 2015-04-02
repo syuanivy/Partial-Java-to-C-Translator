@@ -1,12 +1,11 @@
 package cs652.j.semantics;
 
-import cs652.j.JTran;
+
 import cs652.j.parser.JParser;
 import org.antlr.symbols.*;
-import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.NotNull;
 
-import java.util.List;
+
 
 public class ComputeTypes extends SetScopes {
     public static final Type JPrimitive_String = new JPrimitiveType("String");
@@ -14,6 +13,28 @@ public class ComputeTypes extends SetScopes {
     public ComputeTypes(GlobalScope globals) {
         globals.define((Symbol)JPrimitive_String);
         pushScope(globals);
+    }
+
+    @Override
+    public void exitMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx) {
+        ctx.expressionType = ctx.expression().expressionType;
+    }
+
+    @Override
+    public void exitNewExpr(@NotNull JParser.NewExprContext ctx) {
+        ctx.expressionType = (JClass) currentScope.resolve(ctx.creator().getText());
+    }
+
+    @Override
+    public void exitDotExpr(@NotNull JParser.DotExprContext ctx) {
+        JClass c = (JClass) ctx.expression().expressionType;
+        if(c != null) {
+            String name = ctx.dotID.getText();
+            Symbol id = c.resolve(name);
+            TypedSymbol t = (TypedSymbol) id;
+            ctx.expressionType = t.getType();
+            System.out.println(ctx.expression().getText()+ "." + ctx.dotID.getText() + " resolved to be " + t.getType().getName());
+        }
     }
 
     @Override
@@ -61,30 +82,6 @@ public class ComputeTypes extends SetScopes {
 
         }
     }
-
-    @Override
-    public void exitDotExpr(@NotNull JParser.DotExprContext ctx) {
-        JClass c = (JClass) ctx.expression().expressionType;
-        if(c != null) {
-            String name = ctx.dotID.getText();
-            Symbol id = c.resolve(name);
-            TypedSymbol t = (TypedSymbol) id;
-            ctx.expressionType = t.getType();
-            System.out.println(ctx.expression().getText()+ "." + ctx.dotID.getText() + " resolved to be " + t.getType().getName());
-        }
-    }
-
-
-    @Override
-    public void exitMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx) {
-        ctx.expressionType = ctx.expression().expressionType;
-    }
-
-    @Override
-    public void exitNewExpr(@NotNull JParser.NewExprContext ctx) {
-        ctx.expressionType = (JClass) currentScope.resolve(ctx.creator().getText());
-    }
-
 
     public JClass getThisClass(Scope s){
         while(s != null){

@@ -1232,9 +1232,124 @@ public class JParser extends Parser {
 	}
 
 	public static class StatementContext extends ParserRuleContext {
-		public BlockContext block() {
-			return getRuleContext(BlockContext.class,0);
+		public StatementContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
 		}
+		@Override public int getRuleIndex() { return RULE_statement; }
+	 
+		public StatementContext() { }
+		public void copyFrom(StatementContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class ReturnStatContext extends StatementContext {
+		public ExpressionContext retExp;
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public ReturnStatContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).enterReturnStat(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).exitReturnStat(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitReturnStat(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class WhileStatContext extends StatementContext {
+		public ParExpressionContext whileCond;
+		public StatementContext whileStat;
+		public ParExpressionContext parExpression() {
+			return getRuleContext(ParExpressionContext.class,0);
+		}
+		public StatementContext statement() {
+			return getRuleContext(StatementContext.class,0);
+		}
+		public WhileStatContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).enterWhileStat(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).exitWhileStat(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitWhileStat(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class EmptyStatContext extends StatementContext {
+		public EmptyStatContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).enterEmptyStat(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).exitEmptyStat(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitEmptyStat(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class AssignStatContext extends StatementContext {
+		public ExpressionContext left;
+		public ExpressionContext right;
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
+		}
+		public AssignStatContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).enterAssignStat(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).exitAssignStat(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitAssignStat(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class PrintStatContext extends StatementContext {
+		public TerminalNode StringLiteral() { return getToken(JParser.StringLiteral, 0); }
+		public ExpressionListContext expressionList() {
+			return getRuleContext(ExpressionListContext.class,0);
+		}
+		public PrintStatContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).enterPrintStat(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).exitPrintStat(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitPrintStat(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class IfStatContext extends StatementContext {
+		public ParExpressionContext ifCond;
+		public StatementContext ifStat;
+		public StatementContext elseStat;
 		public ParExpressionContext parExpression() {
 			return getRuleContext(ParExpressionContext.class,0);
 		}
@@ -1244,34 +1359,56 @@ public class JParser extends Parser {
 		public StatementContext statement(int i) {
 			return getRuleContext(StatementContext.class,i);
 		}
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public TerminalNode StringLiteral() { return getToken(JParser.StringLiteral, 0); }
-		public ExpressionListContext expressionList() {
-			return getRuleContext(ExpressionListContext.class,0);
-		}
-		public StatementExpressionContext statementExpression() {
-			return getRuleContext(StatementExpressionContext.class,0);
-		}
-		public StatementContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_statement; }
+		public IfStatContext(StatementContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JListener ) ((JListener)listener).enterStatement(this);
+			if ( listener instanceof JListener ) ((JListener)listener).enterIfStat(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JListener ) ((JListener)listener).exitStatement(this);
+			if ( listener instanceof JListener ) ((JListener)listener).exitIfStat(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitStatement(this);
+			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitIfStat(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class StatExprContext extends StatementContext {
+		public StatementExpressionContext statementExpression() {
+			return getRuleContext(StatementExpressionContext.class,0);
+		}
+		public StatExprContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).enterStatExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).exitStatExpr(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitStatExpr(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class BlockStatContext extends StatementContext {
+		public BlockContext block() {
+			return getRuleContext(BlockContext.class,0);
+		}
+		public BlockStatContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).enterBlockStat(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).exitBlockStat(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitBlockStat(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1284,6 +1421,7 @@ public class JParser extends Parser {
 			setState(189);
 			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
 			case 1:
+				_localctx = new BlockStatContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(155); 
@@ -1291,14 +1429,15 @@ public class JParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new IfStatContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(156); 
 				match(IF);
 				setState(157); 
-				parExpression();
+				((IfStatContext)_localctx).ifCond = parExpression();
 				setState(158); 
-				statement();
+				((IfStatContext)_localctx).ifStat = statement();
 				setState(161);
 				switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 				case 1:
@@ -1306,24 +1445,26 @@ public class JParser extends Parser {
 					setState(159); 
 					match(ELSE);
 					setState(160); 
-					statement();
+					((IfStatContext)_localctx).elseStat = statement();
 					}
 					break;
 				}
 				}
 				break;
 			case 3:
+				_localctx = new WhileStatContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(163); 
 				match(WHILE);
 				setState(164); 
-				parExpression();
+				((WhileStatContext)_localctx).whileCond = parExpression();
 				setState(165); 
-				statement();
+				((WhileStatContext)_localctx).whileStat = statement();
 				}
 				break;
 			case 4:
+				_localctx = new ReturnStatContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(167); 
@@ -1333,7 +1474,7 @@ public class JParser extends Parser {
 				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << NEW) | (1L << THIS) | (1L << IntegerLiteral) | (1L << FloatPointLiteral) | (1L << StringLiteral) | (1L << NullLiteral) | (1L << Identifier))) != 0)) {
 					{
 					setState(168); 
-					expression(0);
+					((ReturnStatContext)_localctx).retExp = expression(0);
 					}
 				}
 
@@ -1342,6 +1483,7 @@ public class JParser extends Parser {
 				}
 				break;
 			case 5:
+				_localctx = new EmptyStatContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(172); 
@@ -1349,6 +1491,7 @@ public class JParser extends Parser {
 				}
 				break;
 			case 6:
+				_localctx = new PrintStatContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(173); 
@@ -1373,6 +1516,7 @@ public class JParser extends Parser {
 				}
 				break;
 			case 7:
+				_localctx = new StatExprContext(_localctx);
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(181); 
@@ -1382,14 +1526,15 @@ public class JParser extends Parser {
 				}
 				break;
 			case 8:
+				_localctx = new AssignStatContext(_localctx);
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(184); 
-				expression(0);
+				((AssignStatContext)_localctx).left = expression(0);
 				setState(185); 
 				match(ASSIGN);
 				setState(186); 
-				expression(0);
+				((AssignStatContext)_localctx).right = expression(0);
 				setState(187); 
 				match(SEMI);
 				}

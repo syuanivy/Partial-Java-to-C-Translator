@@ -213,15 +213,101 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitLocalVariableDeclaration(@NotNull JParser.LocalVariableDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JParser#statement}.
+	 * Enter a parse tree produced by the {@code blockStat}
+	 * labeled alternative in {@link JParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatement(@NotNull JParser.StatementContext ctx);
+	void enterBlockStat(@NotNull JParser.BlockStatContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JParser#statement}.
+	 * Exit a parse tree produced by the {@code blockStat}
+	 * labeled alternative in {@link JParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatement(@NotNull JParser.StatementContext ctx);
+	void exitBlockStat(@NotNull JParser.BlockStatContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ifStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfStat(@NotNull JParser.IfStatContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ifStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfStat(@NotNull JParser.IfStatContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code whileStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileStat(@NotNull JParser.WhileStatContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code whileStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileStat(@NotNull JParser.WhileStatContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code returnStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnStat(@NotNull JParser.ReturnStatContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code returnStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnStat(@NotNull JParser.ReturnStatContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code emptyStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterEmptyStat(@NotNull JParser.EmptyStatContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code emptyStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitEmptyStat(@NotNull JParser.EmptyStatContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code printStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrintStat(@NotNull JParser.PrintStatContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code printStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrintStat(@NotNull JParser.PrintStatContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code statExpr}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatExpr(@NotNull JParser.StatExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code statExpr}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatExpr(@NotNull JParser.StatExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code assignStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignStat(@NotNull JParser.AssignStatContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code assignStat}
+	 * labeled alternative in {@link JParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignStat(@NotNull JParser.AssignStatContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JParser#parExpression}.
 	 * @param ctx the parse tree

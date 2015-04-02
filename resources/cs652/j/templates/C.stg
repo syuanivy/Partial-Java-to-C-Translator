@@ -24,6 +24,8 @@ object *alloc(metadata *clazz) {
 >>
 
 ClassDef(class, fields, methods, vtable) ::= <<
+<class.>
+<methods>
 >>
 
 MethodDef(m,funcName,returnType,args,body) ::= <<

@@ -102,14 +102,14 @@ localVariableDeclaration
     ;
 //statement
 statement
-    :   block
-    |   'if' parExpression statement ('else' statement)?
-    |   'while' parExpression statement
-    |   'return' expression? ';'
-    |   ';'
-    |   'printf(' StringLiteral (',' expressionList )? ')' ';'
-    |   statementExpression ';'
-    |   expression '=' expression ';'
+    :   block #blockStat
+    |   'if' ifCond = parExpression ifStat = statement ('else' elseStat= statement)? #ifStat
+    |   'while' whileCond = parExpression whileStat = statement #whileStat
+    |   'return' retExp = expression? ';' #returnStat
+    |   ';' #emptyStat
+    |   'printf(' StringLiteral (',' expressionList )? ')' ';' #printStat
+    |   statementExpression ';' #statExpr
+    |   left = expression '=' right = expression ';' #assignStat
     ;
 
 // EXPRESSIONS
