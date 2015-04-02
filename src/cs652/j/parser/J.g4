@@ -124,10 +124,10 @@ statementExpression
     ;
 //expression
 expression returns [Type expressionType]
-    :   primary
-    |   dotExpr = expression '.' dotID = Identifier
-    |   methodCallExpr = expression '(' expressionList? ')'
-    |   newExpr = 'new' creator
+    :   primary #primaryExpr
+    |   expression '.' dotID = Identifier #dotExpr
+    |   expression '(' expressionList? ')' #methodCarExpr
+    |   'new' creator #newExpr
     ;
 expressionList
     :   expression (',' expression)*

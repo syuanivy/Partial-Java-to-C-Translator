@@ -243,15 +243,53 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JParser#expression}.
+	 * Enter a parse tree produced by the {@code methodCarExpr}
+	 * labeled alternative in {@link JParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(@NotNull JParser.ExpressionContext ctx);
+	void enterMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link JParser#expression}.
+	 * Exit a parse tree produced by the {@code methodCarExpr}
+	 * labeled alternative in {@link JParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(@NotNull JParser.ExpressionContext ctx);
+	void exitMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code newExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterNewExpr(@NotNull JParser.NewExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code newExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitNewExpr(@NotNull JParser.NewExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code dotExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterDotExpr(@NotNull JParser.DotExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code dotExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitDotExpr(@NotNull JParser.DotExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code primaryExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code primaryExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JParser#expressionList}.
 	 * @param ctx the parse tree

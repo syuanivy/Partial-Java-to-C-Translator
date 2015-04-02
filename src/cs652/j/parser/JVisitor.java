@@ -154,11 +154,33 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JParser#expression}.
+	 * Visit a parse tree produced by the {@code methodCarExpr}
+	 * labeled alternative in {@link JParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpression(@NotNull JParser.ExpressionContext ctx);
+	T visitMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code newExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNewExpr(@NotNull JParser.NewExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code dotExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDotExpr(@NotNull JParser.DotExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code primaryExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JParser#expressionList}.
 	 * @param ctx the parse tree
