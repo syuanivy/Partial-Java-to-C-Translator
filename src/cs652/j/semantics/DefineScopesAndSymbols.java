@@ -15,7 +15,7 @@ public class DefineScopesAndSymbols extends JBaseListener {
 
 
 	public DefineScopesAndSymbols(GlobalScope globals) {
-		currentScope = globals;
+		pushScope(globals);
         PredefinedScope predefinedScope = new PredefinedScope();
         predefinedScope.define((Symbol)JPrimitive_INT);
         predefinedScope.define((Symbol)JPrimitive_FLOAT);
@@ -37,7 +37,7 @@ public class DefineScopesAndSymbols extends JBaseListener {
 
     @Override
     public void enterClassDeclaration(@NotNull JParser.ClassDeclarationContext ctx)  {
-        JClass c = new JClass(ctx.getText(), ctx);
+        JClass c = new JClass(ctx.Identifier().getText(), ctx);
         c.setEnclosingScope(currentScope);
         currentScope.define(c);
         ctx.scope = c;
@@ -55,7 +55,7 @@ public class DefineScopesAndSymbols extends JBaseListener {
 
     @Override
     public void enterFormalParameter(@NotNull JParser.FormalParameterContext ctx){
-        JArg arg = new JArg(currentScope, ctx.getText());
+        JArg arg = new JArg(currentScope, ctx.variableDeclarator().Identifier().getText());
         Type argT = (Type) currentScope.resolve(ctx.type().getText());
         arg.setType(argT);
         currentScope.define(arg);
@@ -63,14 +63,14 @@ public class DefineScopesAndSymbols extends JBaseListener {
 
     @Override
     public void enterFieldDeclaration(@NotNull JParser.FieldDeclarationContext ctx){
-        JField field = new JField(currentScope, ctx.getText());
+        JField field = new JField(currentScope, ctx.variableDeclarator().Identifier().getText());
         Type fieldT = (Type) currentScope.resolve(ctx.type().getText());
         field.setType(fieldT);
         currentScope.define(field);
     }
 
     @Override public void enterMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx) {
-        JMethod m = new JMethod(ctx.getText(), ctx);
+        JMethod m = new JMethod(ctx.Identifier().getText(), ctx);
         ctx.scope = m;
         m.setEnclosingScope(currentScope);
         currentScope.define(m);
@@ -104,21 +104,19 @@ public class DefineScopesAndSymbols extends JBaseListener {
 
     @Override
     public void enterLocalVariableDeclaration(@NotNull JParser.LocalVariableDeclarationContext ctx){
-        JVar var = new JVar(currentScope, ctx.getText());
+        JVar var = new JVar(currentScope, ctx.variableDeclarator().Identifier().getText());
         Type varT = (Type) currentScope.resolve(ctx.type().getText());
         var.setType(varT);
         currentScope.define(var);
     }
 
-
-
     private void pushScope(Scope s) {
         currentScope = s;
-        System.out.println("entering: "+currentScope.getScopeName()+":"+s);
+        System.out.println("entering: "+currentScope.getScopeName());
     }
 
     private void popScope() {
-        System.out.println("leaving: "+currentScope.getScopeName()+":"+currentScope);
+        System.out.println("leaving: "+currentScope.getScopeName());
         currentScope = currentScope.getEnclosingScope();
     }
 }

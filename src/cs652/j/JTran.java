@@ -17,6 +17,7 @@ import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.stringtemplate.v4.ST;
 
+import java.io.File;
 import java.io.IOException;
 
 public class JTran {
@@ -27,7 +28,7 @@ public class JTran {
 			System.err.println("$ java cs601.j.JTran [-print] [-tree] [-inspect] [-o output-file] file.j");
 			return;
 		}
-		String C_fileName = null;
+		/*String C_fileName = null;
 		String fileName;
 		boolean print = false;
 		boolean gui = false;
@@ -61,12 +62,46 @@ public class JTran {
 					}
 					break label;
 			}
-		}
-
-		new JTran().translate(fileName, C_fileName, print, gui, inspect);
+		}*/
+        String path = "tests/cs652/j";
+        File file = new File(path);
+        File[] array = file.listFiles();
+        for(int i=0;i<array.length;i++) {
+            String path1 = array[i].getPath();
+            String[] a = path1.split("\\.");
+            if (a[1].equals("j")) {
+                System.out.println(a[0]);
+                new JTran().translateAll(path1);
+            }
+        }
+		//new JTran().translate(fileName, C_fileName, print, gui, inspect);
 	}
 
-	public void translate(String fileName, String C_fileName,
+    public void translateAll(String fileName)
+            throws IOException {
+        ANTLRInputStream input = new ANTLRFileStream(fileName);
+        JLexer l = new JLexer(input);
+        TokenStream tokens = new CommonTokenStream(l);
+
+        JParser parser = new JParser(tokens);
+        ParserRuleContext tree = parser.file();
+
+        System.out.println("Define Scope and Symbols: ");
+
+        DefineScopesAndSymbols def = new DefineScopesAndSymbols(globals);
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(def, tree);
+
+        System.out.println("Compute Types: ");
+
+        ComputeTypes computeTypes = new ComputeTypes(globals);
+        walker = new ParseTreeWalker();
+        walker.walk(computeTypes, tree);
+    }
+
+
+
+    public void translate(String fileName, String C_fileName,
 						  boolean print, boolean gui, boolean inspect)
 		throws IOException
 	{
@@ -77,16 +112,22 @@ public class JTran {
 		JParser parser = new JParser(tokens);
 		ParserRuleContext tree = parser.file();
 
+        System.out.println("Define Scope and Symbols: ");
+
 		DefineScopesAndSymbols def = new DefineScopesAndSymbols(globals);
 		ParseTreeWalker walker = new ParseTreeWalker();
 		walker.walk(def, tree);
 
-        /*
+        System.out.println("Compute Types: ");
 
 		ComputeTypes computeTypes = new ComputeTypes(globals);
 		walker = new ParseTreeWalker();
 		walker.walk(computeTypes, tree);
 
+
+
+
+      /*
 		CodeGenerator gen = new CodeGenerator(C_fileName);
 		CFile file = gen.generate(tree);
 
@@ -94,7 +135,7 @@ public class JTran {
 		ST fileST = converter.walk(file);
 
 		String C_code = fileST.render();
-		org.antlr.v4.runtime.misc.Utils.writeFile(C_fileName, C_code);
+		//org.antlr.v4.runtime.misc.Utils.writeFile(C_fileName, C_code);
 
 
 		if ( print ) System.out.println(C_code);

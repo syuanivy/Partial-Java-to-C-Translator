@@ -59,7 +59,7 @@ variableDeclarator
     :   Identifier
     ;
 //method
-methodDeclaration
+methodDeclaration returns [JMethod scope]
     :   type Identifier formalParameters
         (   methodBody
         |   ';'
@@ -84,7 +84,7 @@ methodBody
 
 // STATEMENTS / BLOCKS
 
-block
+block returns [Scope scope]
     :   '{' blockStatement* '}'
     ;
 //blockStatement: localVar Declaration statement, or other statement
@@ -107,7 +107,9 @@ statement
     |   'while' parExpression statement
     |   'return' expression? ';'
     |   ';'
+    |   'printf(' StringLiteral (',' expressionList )? ')' ';'
     |   statementExpression ';'
+    |   expression '=' expression ';'
     ;
 
 // EXPRESSIONS
@@ -116,16 +118,16 @@ parExpression
     :   '(' expression ')'
     ;
 
+
 statementExpression
     :   expression
     ;
 //expression
 expression returns [Type expressionType]
     :   primary
-    |   dotExpr = expression '.' Identifier
+    |   dotExpr = expression '.' dotID = Identifier
     |   methodCallExpr = expression '(' expressionList? ')'
     |   newExpr = 'new' creator
-    |   assignExpr = expression '=' expression
     ;
 expressionList
     :   expression (',' expression)*

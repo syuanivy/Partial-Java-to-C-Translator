@@ -7,3 +7,4 @@ class T {
 T t;
 t = new T();
 t.foo(34,3.14159);
+
