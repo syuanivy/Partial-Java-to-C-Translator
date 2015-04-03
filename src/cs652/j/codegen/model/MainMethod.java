@@ -8,8 +8,9 @@ import java.util.List;
  * Created by Shuai on 3/27/15.
  */
 public class MainMethod extends OutputModelObject{
-    public String retType = "void";
+    public String retType = "int";
     public String methodName = "main";
+    public String args = "int argc, char *argv[]";
     @ModelElement public List<OutputModelObject> statements = new ArrayList<OutputModelObject>();
 
 }

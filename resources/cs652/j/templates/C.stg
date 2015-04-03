@@ -18,51 +18,61 @@ object *alloc(metadata *clazz) {
     return p;
 }
 
-<classes>
+<classes;separator="\n">
 
 <main>
 >>
 
-ClassDef(class, fields, methods, vtable) ::= <<
-<class.>
+ClassDef(class, fields, methods) ::= <<
+
 <methods>
 >>
 
 MethodDef(m,funcName,returnType,args,body) ::= <<
 >>
 
-MainMethod(main,funcName,returnType,args,body) ::= <<
+MainMethod(main,statements) ::= <<
+
+<main.retType> <main.methodName>(<main.args>)
+{
+    <statements;separator="\n">
+}
+
+
+
 >>
 
 Block(block, locals, instrs) ::= <<
 >>
 
-VarDef(var, type)   ::= ""
+VarDef(var, typeSpec)   ::= "<typeSpec> <var.varName>"
 
-FuncName(f)         ::= ""
+FuncName(f)         ::= "<f.funcName>"
 
-ObjectTypeSpec(o)   ::= ""
-PrimitiveTypeSpec(p)::= "<p.name>"
+ObjectTypeSpec(o)   ::= "<o.typeName> *"
+PrimitiveTypeSpec(p)::= "<p.typeName>"
 
-AssignStat(a,left,right) ::= ";"
-PrintStringStat(p)  ::= ""
-PrintStat(p,args)   ::= ""
+AssignStat(a,cast,left,right) ::= "<cast><left> = <right>;"
+PrintStringStat(p)  ::= "printf(<p.str>);"
+PrintStat(p,args)   ::= "printf(<p.str>, <args;separator=\", \">);"
 CallStat(c,call)    ::= ""
-CtorCall(ctor)      ::= ""
-ReturnStat(r,expr)  ::= ""
-WhileStat(w,condition, stat) ::= ""
-IfStat(i,condition, stat) ::= ""
-IfElseStat(i,condition, stat, elseStat) ::= <<
+CtorCall(ctor)      ::= "((<ctor.name> *)alloc(&<ctor.name>_metadata))"
+ReturnStat(r,expr)  ::= "return <expr>;"
+WhileStat(w,condition, block) ::= "while ( <condition> ) {   <block>     <\n>}"
+IfStat(i,condition, statement) ::= "if ( <condition> ) <statement> "
+IfElseStat(i,condition, statement, elseStatement) ::= <<
+if ( <condition> ) <statement>
+else <elseStatement>
 >>
 
 NullRef(n)          ::= "NULL"
 
-LiteralRef(lit)     ::= ""
-VarRef(v)           ::= ""
-FieldRef(f, object) ::= ""
+LiteralRef(lit)     ::= "<lit.literalRef>"
+VarRef(v)           ::= "<v.varRef>"
+FieldRef(f, entity, varField) ::= "<entity>-><varField>"
 ThisRef(t)          ::= "this"
 MethodCall(m, receiver, receiverType, fptrType, args) ::= <<
 >>
 
-FuncPtrType(f, returnType, argTypes) ::= ""
-TypeCast(cast, type, expr) ::= ""
+FuncPtrType(f, returnType, argTypes) ::= "(*(<returnType> (*)(<argTypes;separator=\",\">))"
+TypeCast(cast) ::= "<cast.cast>"

@@ -104,7 +104,7 @@ localVariableDeclaration
 statement
     :   block #blockStat
     |   'if' ifCond = parExpression ifStat = statement ('else' elseStat= statement)? #ifStat
-    |   'while' whileCond = parExpression whileStat = statement #whileStat
+    |   'while' whileCond = parExpression whileBlock = statement #whileStat
     |   'return' retExp = expression? ';' #returnStat
     |   ';' #emptyStat
     |   'printf(' StringLiteral (',' expressionList )? ')' ';' #printStat

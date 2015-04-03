@@ -1264,7 +1264,7 @@ public class JParser extends Parser {
 	}
 	public static class WhileStatContext extends StatementContext {
 		public ParExpressionContext whileCond;
-		public StatementContext whileStat;
+		public StatementContext whileBlock;
 		public ParExpressionContext parExpression() {
 			return getRuleContext(ParExpressionContext.class,0);
 		}
@@ -1460,7 +1460,7 @@ public class JParser extends Parser {
 				setState(164); 
 				((WhileStatContext)_localctx).whileCond = parExpression();
 				setState(165); 
-				((WhileStatContext)_localctx).whileStat = statement();
+				((WhileStatContext)_localctx).whileBlock = statement();
 				}
 				break;
 			case 4:

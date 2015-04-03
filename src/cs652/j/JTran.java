@@ -63,7 +63,7 @@ public class JTran {
 					break label;
 			}
 		}
-        new JTran().translate(fileName, C_fileName, print, gui, inspect);
+        new JTran().translate(fileName, C_fileName,true, gui, inspect);
 
 
 

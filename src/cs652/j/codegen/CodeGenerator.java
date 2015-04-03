@@ -158,7 +158,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     public OutputModelObject visitWhileStat(@NotNull JParser.WhileStatContext ctx) {
         WhileStat whileStat = new WhileStat();
         whileStat.condition = (Expr) visitParExpression(ctx.whileCond);
-        whileStat.statement = (Stat) visit(ctx.whileStat);
+        whileStat.block = (Block) visit(ctx.whileBlock);
         return whileStat;
     }
 
