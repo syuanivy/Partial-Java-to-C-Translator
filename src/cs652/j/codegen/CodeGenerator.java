@@ -6,6 +6,8 @@ import cs652.j.parser.JParser;
 import cs652.j.semantics.JClass;
 import cs652.j.semantics.JField;
 import org.antlr.symbols.Scope;
+import org.antlr.symbols.Symbol;
+import org.antlr.symbols.TypedSymbol;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.stringtemplate.v4.STGroup;
@@ -61,7 +63,8 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     @Override
     public OutputModelObject visitFieldDeclaration(@NotNull JParser.FieldDeclarationContext ctx) {
-        VarDef varDef = new VarDef(ctx.type().getText(), ctx.variableDeclarator().Identifier().getText());
+        VarDef varDef = new VarDef(ctx.variableDeclarator().Identifier().getText());
+        varDef.typeSpec = (TypeSpec) visitType(ctx.type());
         return varDef;
     }
 
@@ -69,10 +72,23 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     public OutputModelObject visitMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx) {
         MethodDef method = new MethodDef(ctx.type().getText(), ctx.Identifier().getText());
         for(JParser.FormalParameterContext par : ctx.formalParameters().formalParameterList().formalParameter()){
-            method.parameters.add(new VarDef(par.type().getText(), par.variableDeclarator().Identifier().getText()));
+            VarDef p = new VarDef(par.variableDeclarator().Identifier().getText());
+            p.typeSpec = (TypeSpec) visitType(ctx.type());
+            method.parameters.add(p);
         }
         method.body = (Block) visitBlock(ctx.methodBody().block());
         return method;
+    }
+
+    @Override
+    public OutputModelObject visitType(@NotNull JParser.TypeContext ctx) {
+        if(ctx.classType() != null){
+            ObjectTypeSpec objectTypeSpec = new ObjectTypeSpec(ctx.classType().getText());
+            return objectTypeSpec;
+        }else{
+            PrimitiveTypeSpec primitiveTypeSpec = new PrimitiveTypeSpec(ctx.primitiveType().getText());
+            return primitiveTypeSpec;
+        }
     }
 
     @Override
@@ -80,14 +96,15 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         MainMethod main = new MainMethod();
         List<JParser.BlockStatementContext> blockStatements = ctx.blockStatement();
         for(JParser.BlockStatementContext stat : blockStatements){
-            main.statements.add((Stat) visitBlockStatement(stat));
+            main.statements.add( visitBlockStatement(stat));
         }
         return main;
     }
 
     @Override
     public OutputModelObject visitLocalVariableDeclaration(@NotNull JParser.LocalVariableDeclarationContext ctx) {
-        VarDef varDef = new VarDef(ctx.type().getText(), ctx.variableDeclarator().Identifier().getText());
+        VarDef varDef = new VarDef(ctx.variableDeclarator().Identifier().getText());
+        varDef.typeSpec = (TypeSpec) visitType(ctx.type());
         return varDef;
     }
 
@@ -179,6 +196,61 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         AssignStat assignStat = new AssignStat();
         assignStat.left = (Expr) visit(ctx.left);
         assignStat.right = (Expr) visit(ctx.right);
+        if(ctx.left.expressionType instanceof JClass
+            && !ctx.left.expressionType.getName().equals(ctx.right.expressionType.getName()))
+            assignStat.cast = new TypeCast(ctx.left.expressionType.getName());
         return assignStat;
+    }
+
+    @Override
+    public OutputModelObject visitPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx) {
+        //this
+        if(ctx.primary().getText().equals("this")){
+            return new ThisRef();
+        }
+
+        //literal
+        else if(ctx.primary().literal() != null){
+            String literal;
+            if(ctx.primary().literal().IntegerLiteral() != null)
+                literal = ctx.primary().literal().IntegerLiteral().getText();
+            else if(ctx.primary().literal().FloatPointLiteral() != null)
+                literal = ctx.primary().literal().FloatPointLiteral().getText();
+            else if(ctx.primary().literal().StringLiteral() != null)
+                literal = ctx.primary().literal().StringLiteral().getText();
+            else
+                return new NullRef();
+            return new LiteralRef(literal);
+        }
+
+        //Identifier
+        else if(ctx.primary().Identifier() != null){
+            return new VarRef(ctx.primary().Identifier().getText());
+        }
+        return super.visitPrimaryExpr(ctx);
+    }
+
+    @Override
+    public OutputModelObject visitDotExpr(@NotNull JParser.DotExprContext ctx) {
+        FieldRef fieldRef = new FieldRef(ctx.dotID.getText());
+        fieldRef.entity = (Expr) visit(ctx.expression());
+        return fieldRef;
+    }
+
+    @Override
+    public OutputModelObject visitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) {
+        MethodCall call = new MethodCall();
+        call.funcName = (Expr) visit(ctx.expression());
+
+        for(JParser.ExpressionContext arg : ctx.expressionList().expression())
+            call.args.add((Expr) visit(arg));
+
+        return call;
+    }
+
+    @Override
+    public OutputModelObject visitNewExpr(@NotNull JParser.NewExprContext ctx) {
+        CtorCall ctor = new CtorCall(ctx.creator().getText());
+        return ctor;
     }
 }

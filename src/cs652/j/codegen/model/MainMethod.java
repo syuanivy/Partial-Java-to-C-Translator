@@ -10,6 +10,6 @@ import java.util.List;
 public class MainMethod extends OutputModelObject{
     public String retType = "void";
     public String methodName = "main";
-    @ModelElement public List<Stat> statements = new ArrayList<Stat>();
+    @ModelElement public List<OutputModelObject> statements = new ArrayList<OutputModelObject>();
 
 }

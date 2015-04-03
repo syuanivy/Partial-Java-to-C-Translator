@@ -1657,28 +1657,6 @@ public class JParser extends Parser {
 			this.expressionType = ctx.expressionType;
 		}
 	}
-	public static class MethodCarExprContext extends ExpressionContext {
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public ExpressionListContext expressionList() {
-			return getRuleContext(ExpressionListContext.class,0);
-		}
-		public MethodCarExprContext(ExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof JListener ) ((JListener)listener).enterMethodCarExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof JListener ) ((JListener)listener).exitMethodCarExpr(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitMethodCarExpr(this);
-			else return visitor.visitChildren(this);
-		}
-	}
 	public static class NewExprContext extends ExpressionContext {
 		public CreatorContext creator() {
 			return getRuleContext(CreatorContext.class,0);
@@ -1716,6 +1694,28 @@ public class JParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitDotExpr(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class MethodCalExprContext extends ExpressionContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public ExpressionListContext expressionList() {
+			return getRuleContext(ExpressionListContext.class,0);
+		}
+		public MethodCalExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).enterMethodCalExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof JListener ) ((JListener)listener).exitMethodCalExpr(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof JVisitor ) return ((JVisitor<? extends T>)visitor).visitMethodCalExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1811,7 +1811,7 @@ public class JParser extends Parser {
 						break;
 					case 2:
 						{
-						_localctx = new MethodCarExprContext(new ExpressionContext(_parentctx, _parentState));
+						_localctx = new MethodCalExprContext(new ExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(206);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");

@@ -28,7 +28,7 @@ public class JTran {
 			System.err.println("$ java cs601.j.JTran [-print] [-tree] [-inspect] [-o output-file] file.j");
 			return;
 		}
-		/*String C_fileName = null;
+		String C_fileName = null;
 		String fileName;
 		boolean print = false;
 		boolean gui = false;
@@ -62,7 +62,12 @@ public class JTran {
 					}
 					break label;
 			}
-		}*/
+		}
+        new JTran().translate(fileName, C_fileName, print, gui, inspect);
+
+
+
+       /* //Test all;
         String path = "tests/cs652/j";
         File file = new File(path);
         File[] array = file.listFiles();
@@ -73,9 +78,8 @@ public class JTran {
                 System.out.println(a[0]);
                 new JTran().translateAll(path1);
             }
-        }
-		//new JTran().translate(fileName, C_fileName, print, gui, inspect);
-	}
+        }*/
+		}
 
     public void translateAll(String fileName)
             throws IOException {
@@ -124,12 +128,9 @@ public class JTran {
 		walker = new ParseTreeWalker();
 		walker.walk(computeTypes, tree);
 
+        CodeGenerator gen = new CodeGenerator(C_fileName);
+        CFile file = gen.generate(tree);
 
-
-
-      /*
-		CodeGenerator gen = new CodeGenerator(C_fileName);
-		CFile file = gen.generate(tree);
 
 		ModelConverter converter = new ModelConverter(gen.templates);
 		ST fileST = converter.walk(file);
@@ -144,6 +145,6 @@ public class JTran {
 
 		if ( inspect ) fileST.inspect(); // very useful; pulls up ST debugger
 
-		*/
+
 	}
 }

@@ -381,18 +381,6 @@ public class JBaseListener implements JListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterNewExpr(@NotNull JParser.NewExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -412,6 +400,18 @@ public class JBaseListener implements JListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDotExpr(@NotNull JParser.DotExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

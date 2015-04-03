@@ -232,13 +232,6 @@ public class JBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements JVis
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
 	@Override public T visitNewExpr(@NotNull JParser.NewExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -247,6 +240,13 @@ public class JBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements JVis
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitDotExpr(@NotNull JParser.DotExprContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -126,7 +126,7 @@ statementExpression
 expression returns [Type expressionType]
     :   primary #primaryExpr
     |   expression '.' dotID = Identifier #dotExpr
-    |   expression '(' expressionList? ')' #methodCarExpr
+    |   expression '(' expressionList? ')' #methodCalExpr
     |   'new' creator #newExpr
     ;
 expressionList

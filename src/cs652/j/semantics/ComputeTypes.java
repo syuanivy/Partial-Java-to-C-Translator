@@ -16,7 +16,7 @@ public class ComputeTypes extends SetScopes {
     }
 
     @Override
-    public void exitMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx) {
+    public void exitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) {
         ctx.expressionType = ctx.expression().expressionType;
     }
 

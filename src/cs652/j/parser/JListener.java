@@ -329,18 +329,6 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code methodCarExpr}
-	 * labeled alternative in {@link JParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code methodCarExpr}
-	 * labeled alternative in {@link JParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitMethodCarExpr(@NotNull JParser.MethodCarExprContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code newExpr}
 	 * labeled alternative in {@link JParser#expression}.
 	 * @param ctx the parse tree
@@ -364,6 +352,18 @@ public interface JListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDotExpr(@NotNull JParser.DotExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code methodCalExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code methodCalExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code primaryExpr}
 	 * labeled alternative in {@link JParser#expression}.
