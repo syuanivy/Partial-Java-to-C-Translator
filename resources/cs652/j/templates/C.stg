@@ -89,7 +89,7 @@ VarRef(v)           ::= "<v.varRef>"
 FieldRef(f, entity, varField) ::= "<entity>-><varField>"
 ThisRef(t)          ::= "this"
 MethodCall(m, funcName,funcPtrType, receiver, args) ::= <<
-<funcType>(*(<receiver>->clazz->_vtable)[funcName_SLOT])(<args;separator=",">)
+<funcPtrType>(*(<receiver>)->clazz->_vtable)[funcName_SLOT])(<args;separator=",">)
 >>
 
 FuncPtrType(f, retType, argTypes) ::= "(*(<retType> (*)(<argTypes;separator=\",\">))"

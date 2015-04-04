@@ -263,10 +263,13 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     @Override
     public OutputModelObject visitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) {
         MethodCall call = new MethodCall();
-        if(ctx.expression() instanceof JParser.DotExprContext){
+        if(ctx.expression() instanceof JParser.DotExprContext){ // this is for sure
             FieldRef callExpr = (FieldRef) visit(ctx.expression()) ;
-            call.funcName = new FuncName(callExpr.varField.varRef);
-            call.receiver = callExpr.entity;
+            call.funcName = new FuncName(callExpr.varField.varRef);//name of the method, the D in a.b.c. D
+            if(callExpr.entity.entity == null) // a.foo(), funcName = foo, receiver. varField.varRef = a
+                call.receiver = new VarRef(callExpr.entity.varField.varRef);// call.receiver is a varRef
+            else                               // a.b.c.foo()
+                call.receiver = callExpr.entity; //call.reciver is a FieldRef a.b.c
         }
 
         call.funcPtrType.retType  = getTypeSpec(ctx.expressionType);
