@@ -78,6 +78,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         pushScope(ctx.scope);
         MethodDef method = (MethodDef)visitMethodDeclaration(ctx);
         method.receiver = new VarRef(receiverClass);
+        method.parameters.get(0).typeSpec = new PrimitiveTypeSpec(receiverClass); //cheat too make *this, it's actually ObjectTypeSpec
         popScope();
         return method;
     }
@@ -86,12 +87,16 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         MethodDef method = new MethodDef(ctx.Identifier().getText());
         method.retType = (TypeSpec) visitType(ctx.type());
         method.slot = new VarRef(String.valueOf(ctx.scope.getSlotNumber()));
+        method.body = (Block) visitBlock(ctx.methodBody().block());
+        ParaDef thisPara = new ParaDef("*this");
+        method.parameters.add(thisPara);
+        if(ctx.formalParameters().formalParameterList() == null)
+            return method;
         for(JParser.FormalParameterContext par : ctx.formalParameters().formalParameterList().formalParameter()){
             ParaDef p = new ParaDef(par.variableDeclarator().Identifier().getText());
             p.typeSpec = (TypeSpec) visitType(par.type());
             method.parameters.add(p);
         }
-        method.body = (Block) visitBlock(ctx.methodBody().block());
         return method;
     }
 
@@ -284,7 +289,8 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
         call.args.add(new VarRef(thisArg));
 
-
+        if(ctx.expressionList() == null)
+            return call;
         for(JParser.ExpressionContext arg : ctx.expressionList().expression()){
             call.args.add((Expr)visit(arg));
             call.funcPtrType.argTypes.add(getTypeSpec(arg.expressionType));
@@ -301,7 +307,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     @Override
     public OutputModelObject visitNewExpr(@NotNull JParser.NewExprContext ctx) {
-        CtorCall ctor = new CtorCall(ctx.creator().getText());
+        CtorCall ctor = new CtorCall(ctx.creator().type().getText());
         return ctor;
     }
 

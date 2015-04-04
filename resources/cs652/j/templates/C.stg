@@ -44,7 +44,7 @@ metadata <class.className>_metadata = {"<class.className>", sizeof(<class.classN
 >>
 
 MethodDef(m,methodName, retType,parameters,body,slot,receiver) ::= <<
-<retType> <receiver>_<methodName>(<receiver> *this, <parameters;separator = ", ">)
+<retType> <receiver>_<methodName>(<parameters;separator = ", ">)
 {
 <body>
 }
@@ -74,7 +74,7 @@ AssignStat(a,cast,left,right) ::= "<cast><left> = <right>;"
 PrintStringStat(p)  ::= "printf(<p.str>);"
 PrintStat(p,args)   ::= "printf(<p.str>, <args;separator=\", \">);"
 CallStat(c,call)    ::= ""
-CtorCall(ctor)      ::= "((<ctor.name> *)alloc(&<ctor.name>_metadata))"
+CtorCall(ctor)      ::= "((<ctor.ctor> *)alloc(&<ctor.ctor>_metadata))"
 ReturnStat(r,expr)  ::= "return <expr>;"
 WhileStat(w,condition, block) ::= "while ( <condition> ) {   <block>     <\n>}"
 IfStat(i,condition, statement) ::= "if ( <condition> ) <statement> "
