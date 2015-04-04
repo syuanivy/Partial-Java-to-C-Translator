@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Shuai on 3/27/15.
  */
 public class MethodCall extends Expr{ //a.b.c.foo()
-    @ModelElement public FuncName funcName;//foo
+    @ModelElement public FuncName funcName;//T_foo
     @ModelElement public ObjectTypeSpec recType;// receiver type
     @ModelElement public VarRef receiver; //a.b.c
     @ModelElement public List<Expr> args = new ArrayList<Expr>();//a.b.c, arg1,arg2...

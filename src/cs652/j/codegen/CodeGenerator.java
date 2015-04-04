@@ -87,8 +87,8 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         method.retType = (TypeSpec) visitType(ctx.type());
         method.slot = new VarRef(String.valueOf(ctx.scope.getSlotNumber()));
         for(JParser.FormalParameterContext par : ctx.formalParameters().formalParameterList().formalParameter()){
-            VarDef p = new VarDef(par.variableDeclarator().Identifier().getText());
-            p.typeSpec = (TypeSpec) visitType(ctx.type());
+            ParaDef p = new ParaDef(par.variableDeclarator().Identifier().getText());
+            p.typeSpec = (TypeSpec) visitType(par.type());
             method.parameters.add(p);
         }
         method.body = (Block) visitBlock(ctx.methodBody().block());
@@ -137,7 +137,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         pushScope(ctx.scope);
         Block block  = new Block();
         List<JParser.BlockStatementContext> blockstats = new ArrayList<JParser.BlockStatementContext>();
-        for(JParser.BlockStatementContext bs : blockstats)
+        for(JParser.BlockStatementContext bs : ctx.blockStatement())
             block.statements.add((Stat)visitBlockStatement(bs));
         popScope();
         return block;

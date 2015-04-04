@@ -8,9 +8,9 @@ import java.util.List;
  */
 public class MethodDef extends OutputModelObject{
     @ModelElement public TypeSpec retType;
-    @ModelElement public FuncName methodName;
+    @ModelElement public FuncName methodName;//T_foo
     @ModelElement public VarRef receiver; // the receiver class
-    @ModelElement public List<VarDef> parameters = new ArrayList<VarDef>();
+    @ModelElement public List<ParaDef> parameters = new ArrayList<ParaDef>();
     @ModelElement public Block body = new Block();
     @ModelElement public VarRef slot;// the index among all methods of the class
 
