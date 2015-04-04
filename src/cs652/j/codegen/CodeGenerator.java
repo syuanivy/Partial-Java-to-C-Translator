@@ -279,9 +279,11 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         call.funcPtrType.retType  = getTypeSpec(ctx.expressionType);
 
         call.funcPtrType.argTypes.add(call.recType);
-        call.args.add(call.receiver);
 
-        call.args.add(call.receiver);
+        String thisArg = "(("+call.recType.typeName+" *)"+call.receiver.varRef+")";
+
+        call.args.add(new VarRef(thisArg));
+
 
         for(JParser.ExpressionContext arg : ctx.expressionList().expression()){
             call.args.add((Expr)visit(arg));
