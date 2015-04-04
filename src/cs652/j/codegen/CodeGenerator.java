@@ -164,12 +164,12 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     public OutputModelObject visitIfStat(@NotNull JParser.IfStatContext ctx) {
         if(ctx.elseStat == null){
             IfStat ifStat = new IfStat();
-            ifStat.condition = (Expr) visitParExpression(ctx.ifCond);
+            ifStat.condition = (Expr) visit(ctx.parExpression().expression());
             ifStat.statement = (Stat) visit(ctx.ifStat);
             return ifStat;
         }else{
             IfElseStat ifElseStat = new IfElseStat();
-            ifElseStat.condition = (Expr) visitParExpression(ctx.ifCond);
+            ifElseStat.condition = (Expr) visit(ctx.parExpression().expression());
             ifElseStat.statement = (Stat) visit(ctx.ifStat);
             ifElseStat.elseStatement = (Stat) visit(ctx.elseStat);
             return ifElseStat;
@@ -179,7 +179,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     @Override
     public OutputModelObject visitWhileStat(@NotNull JParser.WhileStatContext ctx) {
         WhileStat whileStat = new WhileStat();
-        whileStat.condition = (Expr) visitParExpression(ctx.whileCond);
+        whileStat.condition = (Expr) visit(ctx.parExpression().expression());
         whileStat.block = (Block) visit(ctx.whileBlock);
         return whileStat;
     }
