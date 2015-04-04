@@ -202,7 +202,15 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
             PrintStat printStat = new PrintStat(ctx.StringLiteral().getText());
             List<JParser.ExpressionContext> exprs= ctx.expressionList().expression();
             for(JParser.ExpressionContext arg : exprs){
-                printStat.args.add((Expr) visit(arg));
+                if(arg instanceof JParser.PrimaryExprContext
+                        && currentScope.resolve(((JParser.PrimaryExprContext) arg).primary().Identifier().getText()) instanceof JField){
+                    String field = ((JParser.PrimaryExprContext) arg).primary().Identifier().getText();
+                    FieldRef thisField = new FieldRef(field);
+                    thisField.entity = new VarRef("this");
+                    printStat.args.add(thisField);
+
+                }else
+                    printStat.args.add((Expr) visit(arg));
             }
             return printStat;
         }
