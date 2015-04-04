@@ -87,7 +87,7 @@ NullRef(n)          ::= "NULL"
 
 LiteralRef(lit)     ::= "<lit.literalRef>"
 VarRef(v)           ::= "<v.varRef>"
-FieldRef(f, entity, varField) ::= "<entity>-><varField>"
+FieldRef(f, entity) ::= "<entity>-><f.varRef>"
 ThisRef(t)          ::= "this"
 MethodCall(m, funcName,funcPtrType, receiver, recType, args) ::= <<
 <funcPtrType>(*(<receiver>)->clazz->_vtable)[<funcName>_SLOT])(<args;separator=",">);

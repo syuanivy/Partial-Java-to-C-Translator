@@ -257,10 +257,10 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         if(ctx.dotID == null)
             return null;
         FieldRef fieldRef = new FieldRef(ctx.dotID.getText());
-        //a.b
+        //a.b  entity = varRef a
         if(visit(ctx.expression()) instanceof VarRef)
-            fieldRef.entity = new FieldRef(((VarRef)visit(ctx.expression())).varRef);
-        //a.b.   c-->varField
+            fieldRef.entity = (VarRef)visit(ctx.expression());
+        //a.b.   c-->varField entity = FieldRef a.b
         else
             fieldRef.entity = (FieldRef) visit(ctx.expression());
         return fieldRef;
@@ -270,12 +270,9 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     public OutputModelObject visitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) {
         MethodCall call = new MethodCall();
         if(ctx.expression() instanceof JParser.DotExprContext){ // this is for sure
-            FieldRef callExpr = (FieldRef) visit(ctx.expression()) ;
+            FieldRef callExpr = (FieldRef) visit(ctx.expression()) ; // for sure
             String f = callExpr.varRef; //function name
-            if(callExpr.entity.entity == null) // a.foo(), funcName = foo, receiver. varField.varRef = a
-                call.receiver = new VarRef(callExpr.entity.varRef);// call.receiver is a varRef
-            else                               // a.b.c.foo()
-                call.receiver = callExpr.entity; //call.receiver is a FieldRef a.b.c
+            call.receiver = callExpr.entity;
 
             call.recType = new ObjectTypeSpec(((JVar)currentScope.resolve(call.receiver.varRef)).getType().getName());
             call.funcName = new FuncName(call.recType.typeName+"_"+f);//name of the method, the D in a.b.c. D
