@@ -30,20 +30,20 @@ typedef struct {
     <fields;separator="\n">
 } <class.className>;
 
-<methods:{methodName|#define <class.className>_<methodName>_SLOT <slot>}; separator="\n">
+<methods:{m|#define <class.className>_<m.methodName>_SLOT <m.slot>};separator="\n">
 
 
 <methods; separator="\n\n">
 
 void (*<class.className>_vtable[])() = {
-    <methods:{receiver|(void(*)())&<receiver>_<methodName>};separator=",\n">
+    <methods:{m|(void(*)())&<m.receiver>_<m.methodName>};separator=",\n">
 };
 
 metadata <class.className>_metadata = {"<class.className>", sizeof(<class.className>), &<class.className>_vtable};
 
 >>
 
-MethodDef(m,methodName, retType,parameters,body, slot, receiver) ::= <<
+MethodDef(m,methodName, retType,parameters,body,slot,receiver) ::= <<
 <retType> <methodName>(<parameters;separator = ", ">)
 {
 <body>
