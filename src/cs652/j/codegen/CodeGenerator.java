@@ -1,13 +1,14 @@
 package cs652.j.codegen;
 
+import com.sun.codemodel.internal.ClassType;
+import cs652.j.JTran;
 import cs652.j.codegen.model.*;
 import cs652.j.parser.JBaseVisitor;
 import cs652.j.parser.JParser;
 import cs652.j.semantics.JClass;
 import cs652.j.semantics.JField;
-import org.antlr.symbols.Scope;
-import org.antlr.symbols.Symbol;
-import org.antlr.symbols.TypedSymbol;
+import cs652.j.semantics.JMethod;
+import org.antlr.symbols.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.stringtemplate.v4.STGroup;
@@ -20,7 +21,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 	public STGroup templates;
 	public String fileName;
 
-	public Scope currentScope;
+	public Scope currentScope = null;
 	public JClass currentClass;
 
 	public CodeGenerator(String fileName) {
@@ -35,17 +36,20 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     @Override
     public OutputModelObject visitFile(@NotNull JParser.FileContext ctx) {
+        pushScope(ctx.scope);
         CFile file = new CFile(fileName);
         for(JParser.ClassDeclarationContext c: ctx.classDeclaration()){
             file.classes.add((ClassDef)visitClassDeclaration(c));
         }
 
         file.main = (MainMethod) visitMain(ctx.main());
+        popScope();
         return file;
     }
 
     @Override
     public OutputModelObject visitClassDeclaration(@NotNull JParser.ClassDeclarationContext ctx) {
+        pushScope(ctx.scope);
         ClassDef c = new ClassDef(ctx.Identifier().getText());
         if(ctx.type() != null)
             c.setSuperClass(ctx.type().getText());
@@ -56,8 +60,9 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
             if(field != null)
                 c.fields.add((VarDef)visitFieldDeclaration(field));
             else
-                c.methods.add((MethodDef)visitMethodDeclaration(method));
+                c.methods.add((MethodDef)visitMethodDeclarationHelper(method, ctx.Identifier().getText()));
         }
+        popScope();
         return c;
     }
 
@@ -68,9 +73,18 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         return varDef;
     }
 
+    public OutputModelObject visitMethodDeclarationHelper(@NotNull JParser.MethodDeclarationContext ctx, String receiverClass){
+        pushScope(ctx.scope);
+        MethodDef method = (MethodDef)visitMethodDeclaration(ctx);
+        method.receiver = new VarRef(receiverClass);
+        popScope();
+        return method;
+    }
     @Override
     public OutputModelObject visitMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx) {
-        MethodDef method = new MethodDef(ctx.type().getText(), ctx.Identifier().getText());
+        MethodDef method = new MethodDef(ctx.Identifier().getText());
+        method.retType = (TypeSpec) visitType(ctx.type());
+        method.slot = new VarRef(String.valueOf(ctx.scope.getSlotNumber()));
         for(JParser.FormalParameterContext par : ctx.formalParameters().formalParameterList().formalParameter()){
             VarDef p = new VarDef(par.variableDeclarator().Identifier().getText());
             p.typeSpec = (TypeSpec) visitType(ctx.type());
@@ -119,10 +133,12 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     @Override
     public OutputModelObject visitBlock(@NotNull JParser.BlockContext ctx) {
+        pushScope(ctx.scope);
         Block block  = new Block();
         List<JParser.BlockStatementContext> blockstats = new ArrayList<JParser.BlockStatementContext>();
         for(JParser.BlockStatementContext bs : blockstats)
             block.statements.add((Stat)visitBlockStatement(bs));
+        popScope();
         return block;
     }
 
@@ -232,25 +248,56 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     @Override
     public OutputModelObject visitDotExpr(@NotNull JParser.DotExprContext ctx) {
+        if(ctx.dotID == null)
+            return null;
         FieldRef fieldRef = new FieldRef(ctx.dotID.getText());
-        fieldRef.entity = (Expr) visit(ctx.expression());
+        //a.b
+        if(visit(ctx.expression()) instanceof VarRef)
+            fieldRef.entity = new FieldRef(((VarRef)visit(ctx.expression())).varRef);
+        //a.b.   c-->varField
+        else
+            fieldRef.entity = (FieldRef) visit(ctx.expression());
         return fieldRef;
     }
 
     @Override
     public OutputModelObject visitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) {
         MethodCall call = new MethodCall();
-        call.funcName = (Expr) visit(ctx.expression());
+        if(ctx.expression() instanceof JParser.DotExprContext){
+            FieldRef callExpr = (FieldRef) visit(ctx.expression()) ;
+            call.funcName = new FuncName(callExpr.varField.varRef);
+            call.receiver = callExpr.entity;
+        }
 
-        for(JParser.ExpressionContext arg : ctx.expressionList().expression())
-            call.args.add((Expr) visit(arg));
+        call.funcPtrType.retType  = getTypeSpec(ctx.expressionType);
 
+        for(JParser.ExpressionContext arg : ctx.expressionList().expression()){
+            call.args.add((Expr)visit(arg));
+            call.funcPtrType.argTypes.add(getTypeSpec(arg.expressionType));
+        }
         return call;
+    }
+
+    public TypeSpec getTypeSpec(Type type){
+        if(type instanceof PrimitiveType)
+            return new PrimitiveTypeSpec(type.getName());
+        else
+            return new ObjectTypeSpec(type.getName());
     }
 
     @Override
     public OutputModelObject visitNewExpr(@NotNull JParser.NewExprContext ctx) {
         CtorCall ctor = new CtorCall(ctx.creator().getText());
         return ctor;
+    }
+
+    private void pushScope(Scope s) {
+        currentScope = s;
+        System.out.println("visiting: "+currentScope.getScopeName());
+    }
+
+    private void popScope() {
+        System.out.println("leaving: "+currentScope.getScopeName());
+        currentScope = currentScope.getEnclosingScope();
     }
 }

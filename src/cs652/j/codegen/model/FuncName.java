@@ -5,4 +5,5 @@ package cs652.j.codegen.model;
  */
 public class FuncName extends OutputModelObject{
     public String funcName;
+    public FuncName(String name){this.funcName = name;}
 }

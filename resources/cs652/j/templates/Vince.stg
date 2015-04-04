@@ -1,0 +1,105 @@
+CFile(f, classes, main) ::= <<
+#include \<stdio.h>
+#include \<stdlib.h>
+
+typedef struct {
+    char *name;
+    int size;
+    void (*(*_vtable)[])();
+} metadata;
+
+typedef struct {
+    metadata *clazz;
+} object;
+
+object *alloc(metadata *clazz) {
+    object *p = malloc(clazz->size);
+    p->clazz = clazz;
+    return p;
+}
+
+
+
+<classes;separator="\n">
+
+<main>
+>>
+
+ClassDef(class, fields, methods, vtable, defines) ::= <<
+// D e f i n e  C l a s s  <class.name>
+typedef struct {
+    metadata *clazz;
+    <fields:{f|<f>;};separator="\n">
+} <class.name>;
+
+<defines:{d|#define <class.name>_<d>_SLOT <i0>}; separator="\n">
+
+
+<methods;separator="\n\n">
+
+void (*<class.name>_vtable[])() = {
+    <vtable;separator=",\n">
+};
+
+metadata <class.name>_metadata = {"<class.name>", sizeof(<class.name>), &<class.name>_vtable};
+
+>>
+
+MethodDef(m,funcName,returnType,args,body) ::= <<
+<returnType> <funcName>(<args;separator=", ">)
+{
+    <body>
+}
+>>
+
+MainMethod(main,funcName,returnType,args,body) ::= <<
+<returnType> <funcName>(<args;separator=", ">)
+{
+    <body>
+}
+
+>>
+
+Block(block, locals, instrs) ::= <<
+    <locals:{l|<l>;};separator="\n">
+    <if(locals)>
+
+    <endif>
+    <instrs:{in|<in>};separator="\n">
+>>
+
+VarDef(var, type)   ::= "<type> <var.name>"
+
+FuncName(f)         ::= "<f.name>"
+VtableFuncName(v)   ::= "(void (*)())&<v.className>_<v.name>"
+
+ObjectTypeSpec(o)   ::= "<o.name> *"
+PrimitiveTypeSpec(p)::= "<p.name>"
+
+AssignStat(a,left,right) ::= "<left> = <right>;"
+PrintStringStat(p)  ::= "printf(<p.string>);"
+PrintStat(p,args)   ::= "printf(<p.string>, <args;separator=\", \">);"
+CallStat(c,call)    ::= "<call>;"
+CtorCall(ctor)      ::= "((<ctor.name> *)alloc(&<ctor.name>_metadata))"
+ReturnStat(r,expr)  ::= "return <expr>;"
+WhileStat(w,condition, stat) ::= "while ( <condition> ) {   <stat;separator=\"\n\">     <\n>}"
+IfStat(i,condition, stat) ::= "if ( <condition> ) <stat> "
+IfElseStat(i,condition, stat, elseStat) ::= <<
+if ( <condition> )
+    <stat;separator="\n">
+else
+    <elseStat;separator="\n">
+>>
+
+NullRef(n)          ::= "NULL"
+
+LiteralRef(lit)     ::= "<lit.value>"
+VarRef(v)           ::= "<v.name>"
+FieldRef(f, object) ::= "<object>-><f.name>"
+ThisRef(t)          ::= "this"
+MethodCall(m, receiver, receiverType, fptrType, args) ::= <<
+<fptrType>(*(<receiver>)->clazz->_vtable)[<m.name>_SLOT])(<args;separator=",">)
+>>
+
+FuncPtrType(f, returnType, argTypes) ::= " (*(<returnType> (*)(<argTypes;separator=\",\">))"
+TypeCast(cast, type, expr) ::= "((<type>)<expr>)"

@@ -112,11 +112,11 @@ public class DefineScopesAndSymbols extends JBaseListener {
 
     private void pushScope(Scope s) {
         currentScope = s;
-        System.out.println("entering: "+currentScope.getScopeName());
+      //  System.out.println("entering: "+currentScope.getScopeName());
     }
 
     private void popScope() {
-        System.out.println("leaving: "+currentScope.getScopeName());
+      //  System.out.println("leaving: "+currentScope.getScopeName());
         currentScope = currentScope.getEnclosingScope();
     }
 }
