@@ -129,7 +129,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     public OutputModelObject visitBlockStat(@NotNull JParser.BlockStatContext ctx) {
         Block block  = new Block();
         List<JParser.BlockStatementContext> blockstats = new ArrayList<JParser.BlockStatementContext>();
-        for(JParser.BlockStatementContext bs : blockstats)
+        for(JParser.BlockStatementContext bs : ctx.block().blockStatement())
             block.statements.add(visitBlockStatement(bs));
         return block;
     }
@@ -199,15 +199,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
             PrintStat printStat = new PrintStat(ctx.StringLiteral().getText());
             List<JParser.ExpressionContext> exprs= ctx.expressionList().expression();
             for(JParser.ExpressionContext arg : exprs){
-                if(arg instanceof JParser.PrimaryExprContext
-                        && currentScope.resolve(((JParser.PrimaryExprContext) arg).primary().Identifier().getText()) instanceof JField){
-                    String field = ((JParser.PrimaryExprContext) arg).primary().Identifier().getText();
-                    FieldRef thisField = new FieldRef(field);
-                    thisField.entity = new VarRef("this");
-                    printStat.args.add(thisField);
-
-                }else
-                    printStat.args.add((Expr) visit(arg));
+                printStat.args.add((Expr) visit(arg));
             }
             return printStat;
         }
