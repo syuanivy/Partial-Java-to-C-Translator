@@ -133,7 +133,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         Block block  = new Block();
         List<JParser.BlockStatementContext> blockstats = new ArrayList<JParser.BlockStatementContext>();
         for(JParser.BlockStatementContext bs : blockstats)
-            block.statements.add((Stat)visitBlockStatement(bs));
+            block.statements.add(visitBlockStatement(bs));
         return block;
     }
 
@@ -255,6 +255,11 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
         //Identifier
         else if(ctx.primary().Identifier() != null){
+            if(currentScope.resolve(ctx.primary().Identifier().getText()) instanceof  JField){
+                FieldRef field = new FieldRef(ctx.primary().Identifier().getText());
+                field.entity = new VarRef("this");
+                return field;
+            }
             return new VarRef(ctx.primary().Identifier().getText());
         }
         return super.visitPrimaryExpr(ctx);
