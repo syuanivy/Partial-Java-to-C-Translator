@@ -228,7 +228,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         assignStat.right = (Expr) visit(ctx.right);
         if(ctx.left.expressionType instanceof JClass
             && !ctx.left.expressionType.getName().equals(ctx.right.expressionType.getName()))
-            assignStat.cast = new TypeCast(ctx.left.expressionType.getName());
+            assignStat.cast.castTypeSpec = new ObjectTypeSpec(ctx.left.expressionType.getName());
         return assignStat;
     }
 
@@ -302,14 +302,18 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         call.funcPtrType.retType  = getTypeSpec(ctx.expressionType);
         call.funcPtrType.argTypes.add(call.recType);
         String thisArg = "(("+call.recType.typeName+" *)"+call.receiver.varRef+")";
+        //use typecast
 
         call.args.add(new VarRef(thisArg));
 
         if(ctx.expressionList() == null)
             return call;
+        //resolve method and get all return types
         for(JParser.ExpressionContext arg : ctx.expressionList().expression()){
             TypeSpec argType = getTypeSpec(arg.expressionType);
             if(arg instanceof JParser.NewExprContext)
+                call.args.add((Expr)visit(arg));
+            else if (argType.typeName.equals("void"))
                 call.args.add((Expr)visit(arg));
             else if(argType instanceof ObjectTypeSpec){
                 String a = "("+argType.typeName+" *)"+((VarRef)visit(arg)).varRef+")";

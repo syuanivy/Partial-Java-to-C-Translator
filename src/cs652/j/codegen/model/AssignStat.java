@@ -6,7 +6,7 @@ package cs652.j.codegen.model;
 public class AssignStat extends Stat {
     @ModelElement public Expr left;
     @ModelElement public Expr right;
-    @ModelElement public TypeCast cast;
+    @ModelElement public TypeCast cast = new TypeCast();
 
 
 }

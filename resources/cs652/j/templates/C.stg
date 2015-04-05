@@ -33,7 +33,7 @@ typedef struct {
 <methods:{m|#define <class.className>_<m.methodName>_SLOT <m.slot>};separator="\n">
 
 
-<methods; separator="\n\n">
+<methods; separator="\n">
 
 void (*<class.className>_vtable[])() = {
     <methods:{m|(void(*)())&<m.receiver>_<m.methodName>};separator=",\n">
@@ -70,7 +70,7 @@ VtableFuncName(v)   ::= "(void (*)())&<v.className>_<v.name>"
 ObjectTypeSpec(o)   ::= "<o.typeName> *"
 PrimitiveTypeSpec(p)::= "<p.typeName>"
 
-AssignStat(a,cast,left,right) ::= "<cast><left> = <right>;"
+AssignStat(a,cast,left,right) ::= "<left> = <cast><right>;"
 PrintStringStat(p)  ::= "printf(<p.str>);"
 PrintStat(p,args)   ::= "printf(<p.str>, <args;separator=\", \">);"
 CallStat(c,call)    ::= ""
@@ -94,4 +94,4 @@ MethodCall(m, funcName,funcPtrType, receiver, recType, args) ::= <<
 >>
 
 FuncPtrType(f, retType, argTypes) ::= "(*(<retType> (*)(<argTypes;separator=\",\">))"
-TypeCast(cast) ::= "<cast.cast>"
+TypeCast(cast, castTypeSpec) ::= "(<castTypeSpec>)"
