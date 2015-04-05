@@ -5,10 +5,7 @@ import cs652.j.JTran;
 import cs652.j.codegen.model.*;
 import cs652.j.parser.JBaseVisitor;
 import cs652.j.parser.JParser;
-import cs652.j.semantics.JClass;
-import cs652.j.semantics.JField;
-import cs652.j.semantics.JMethod;
-import cs652.j.semantics.JVar;
+import cs652.j.semantics.*;
 import org.antlr.symbols.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -225,10 +222,15 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     public OutputModelObject visitAssignStat(@NotNull JParser.AssignStatContext ctx) {
         AssignStat assignStat = new AssignStat();
         assignStat.left = (Expr) visit(ctx.left);
-        assignStat.right = (Expr) visit(ctx.right);
+
         if(ctx.left.expressionType instanceof JClass
-            && !ctx.left.expressionType.getName().equals(ctx.right.expressionType.getName()))
-            assignStat.cast.castTypeSpec = new ObjectTypeSpec(ctx.left.expressionType.getName());
+            && !ctx.left.expressionType.getName().equals(ctx.right.expressionType.getName())){
+            TypeCast c = new TypeCast(new ObjectTypeSpec(ctx.left.expressionType.getName()));
+            c.expr = (Expr) visit(ctx.right);
+            assignStat.right = c;
+        }
+        else
+            assignStat.right = (Expr) visit(ctx.right);
         return assignStat;
     }
 
@@ -284,55 +286,78 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     @Override
     public OutputModelObject visitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) {
         MethodCall call = new MethodCall();
-        if(ctx.expression() instanceof JParser.DotExprContext){ //a.foo() or a.b.c.foo()
-            FieldRef callExpr = (FieldRef) visit(ctx.expression()) ; // for sure
-            String f = callExpr.varRef; //function name
-            call.receiver = callExpr.entity;
-            if(call.receiver.varRef.equals("this"))
-                call.recType = new ObjectTypeSpec(getThisClass(currentScope).getName());
-            else
-                call.recType = new ObjectTypeSpec(((JVar)currentScope.resolve(call.receiver.varRef)).getType().getName());
-            call.funcName = new FuncName(call.recType.typeName+"_"+f);//name of the method, the D in a.b.c. D
-        }else{    //within method declaration, foo();
-            String f =((VarRef)visit(ctx.expression())).varRef;
-            call.receiver = new VarRef("this");
-            call.recType = new ObjectTypeSpec(getThisClass(currentScope).getName());
-            call.funcName = new FuncName(call.recType.typeName+"_"+f);//name of the method, the D in a.b.c. D
+        /*find functionName, receiver object and receiver type.*/
+        //"foo()", a method call within another method declaration, implicit receiver "this"
+        if(ctx.expression() instanceof JParser.PrimaryExprContext){//foo
+            String f =((VarRef)visit(ctx.expression())).varRef; //"foo"
+            call.receiver = new ThisRef(); //this
+            call.recType = typeOfThis(); //T
+            call.funcName = new FuncName(f); //foo
+        // "a.b.c.foo()", a method call with explicit receiver object
+        }else if (ctx.expression() instanceof JParser.DotExprContext){ //a.b.c.foo
+            FieldRef callExpr = (FieldRef) visit(ctx.expression()) ; //a.b.c->entity, foo->varRef
+            call.funcName = new FuncName(callExpr.varRef); //foo
+            Type rec = ((JParser.DotExprContext) ctx.expression()).expression().expressionType;//type of a.b.c
+            call.recType = (ObjectTypeSpec)getTypeSpec(rec);//T
+            call.receiver = callExpr.entity; //a.b.c
         }
-        call.funcPtrType.retType  = getTypeSpec(ctx.expressionType);
-        call.funcPtrType.argTypes.add(call.recType);
-        String thisArg = "(("+call.recType.typeName+" *)"+call.receiver.varRef+")";
-        //use typecast
+        call.funcName.className = call.recType.typeName; //T_foo
+        call.funcPtrType.retType  = getTypeSpec(ctx.expressionType); //type of a.b.c.foo()
 
-        call.args.add(new VarRef(thisArg));
+        /*Handle "this", Add the receiver and receiver type to args and funcPtrType.argTypes*/
+        //add "this" to args
+        TypeCast thisArg = new TypeCast(call.recType);
+        thisArg.expr = call.receiver;
+        call.args.add(thisArg);
+        //add "this" type to argTypes and casts
+        call.funcPtrType.argTypes.add(call.recType);
 
         if(ctx.expressionList() == null)
             return call;
-        //resolve method and get all return types
-        for(JParser.ExpressionContext arg : ctx.expressionList().expression()){
-            TypeSpec argType = getTypeSpec(arg.expressionType);
-            if(arg instanceof JParser.NewExprContext)
-                call.args.add((Expr)visit(arg));
-            else if (argType.typeName.equals("void"))
-                call.args.add((Expr)visit(arg));
-            else if(argType instanceof ObjectTypeSpec){
-                String a = "("+argType.typeName+" *)"+((VarRef)visit(arg)).varRef+")";
-                call.args.add(new VarRef(a));
 
-            }else{
-                call.args.add((Expr)visit(arg));
-            }
-            call.funcPtrType.argTypes.add(argType);
-        }
+        //find arg/parameter types and typecasts if objectType
+        findArgTypes(call);
+        findArgs(ctx,call);
         return call;
     }
 
+    private void findArgs(JParser.MethodCalExprContext ctx, MethodCall call) {
+        for(JParser.ExpressionContext arg : ctx.expressionList().expression()){
+            Expr a = (Expr)visit(arg);
+            TypeSpec t = getTypeSpec(arg.expressionType);
+            if(t instanceof ObjectTypeSpec){
+                TypeCast c = new TypeCast(t);
+                c.expr = a;
+                call.args.add(c);
+            }else
+                call.args.add(a);
+        }
+    }
+
+    private void findArgTypes(MethodCall call) {
+        //resolve method to find all parameter types, add to argTypes
+        JClass c = (JClass) currentScope.resolve(call.recType.typeName); //T
+        JMethod m = (JMethod)c.getSymbol(call.funcName.methodName);
+        List<? extends Symbol> parameters = m.getSymbols(); //all JArgs
+        for(Symbol p : parameters) {
+            TypeSpec t = getTypeSpec(((JArg) p).getType());
+            call.funcPtrType.argTypes.add(t);
+        }
+    }
+
+    public ObjectTypeSpec typeOfThis(){
+        String name = getThisClass(currentScope).getName();
+        return new ObjectTypeSpec(name);
+    }
+
+
     public TypeSpec getTypeSpec(Type type){
-        if(type instanceof PrimitiveType)
+        if(type instanceof JPrimitiveType)
             return new PrimitiveTypeSpec(type.getName());
         else
             return new ObjectTypeSpec(type.getName());
     }
+
 
     @Override
     public OutputModelObject visitNewExpr(@NotNull JParser.NewExprContext ctx) {

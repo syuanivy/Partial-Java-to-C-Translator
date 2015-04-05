@@ -64,13 +64,12 @@ Block(block, statements) ::= <<
 VarDef(var, typeSpec)   ::= "<typeSpec> <var.varName>;"
 ParaDef(var, typeSpec) ::= "<typeSpec> <var.varName>"
 
-FuncName(f)         ::= "<f.funcName>"
-VtableFuncName(v)   ::= "(void (*)())&<v.className>_<v.name>"
+FuncName(f)         ::= "<f.className>_<f.methodName>"
 
 ObjectTypeSpec(o)   ::= "<o.typeName> *"
 PrimitiveTypeSpec(p)::= "<p.typeName>"
 
-AssignStat(a,cast,left,right) ::= "<left> = <cast><right>;"
+AssignStat(a,left,right) ::= "<left> = <right>;"
 PrintStringStat(p)  ::= "printf(<p.str>);"
 PrintStat(p,args)   ::= "printf(<p.str>, <args;separator=\", \">);"
 CallStat(c,call)    ::= ""
@@ -94,4 +93,4 @@ MethodCall(m, funcName,funcPtrType, receiver, recType, args) ::= <<
 >>
 
 FuncPtrType(f, retType, argTypes) ::= "(*(<retType> (*)(<argTypes;separator=\",\">))"
-TypeCast(cast, castTypeSpec) ::= "(<castTypeSpec>)"
+TypeCast(cast, castTypeSpec, expr) ::= "((<castTypeSpec>)<expr>)"
