@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class Block extends Stat {
 
-    @ModelElement public List<OutputModelObject> statements = new ArrayList<>();
+    @ModelElement public List<VarDef> declarations = null;
+    @ModelElement public List<Stat> statements = new ArrayList<>();
 
 }

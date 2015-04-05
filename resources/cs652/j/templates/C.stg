@@ -50,14 +50,22 @@ MethodDef(m,methodName, retType,parameters,body,slot,receiver) ::= <<
 }
 >>
 
-MainMethod(main,statements) ::= <<
+MainMethod(main,declarations,statements) ::= <<
 <main.retType> <main.methodName>(<main.args>)
 {
+    <declarations;separator="\n">
+    <if(declarations)>
+
+    <endif>
     <statements;separator="\n">
 }
 >>
 
-Block(block, statements) ::= <<
+Block(block, declarations,statements) ::= <<
+    <declarations;separator="\n">
+    <if(declarations)>
+
+    <endif>
     <statements;separator="\n">
 >>
 

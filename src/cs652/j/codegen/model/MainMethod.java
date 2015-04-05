@@ -11,6 +11,7 @@ public class MainMethod extends OutputModelObject{
     public String retType = "int";
     public String methodName = "main";
     public String args = "int argc, char *argv[]";
-    @ModelElement public List<OutputModelObject> statements = new ArrayList<OutputModelObject>();
+    @ModelElement public List<VarDef> declarations = null;
+    @ModelElement public List<Stat> statements = new ArrayList<>();
 
 }

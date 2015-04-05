@@ -112,8 +112,14 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     public OutputModelObject visitMain(@NotNull JParser.MainContext ctx) {
         MainMethod main = new MainMethod();
         List<JParser.BlockStatementContext> blockStatements = ctx.blockStatement();
-        for(JParser.BlockStatementContext stat : blockStatements){
-            main.statements.add( visitBlockStatement(stat));
+        for(JParser.BlockStatementContext bs : blockStatements){
+            if(visitBlockStatement(bs) instanceof VarDef){
+                if(main.declarations == null)
+                    main.declarations = new ArrayList<>();
+                main.declarations.add((VarDef) visitBlockStatement(bs));
+
+            } else
+                main.statements.add((Stat)visitBlockStatement(bs));
         }
         return main;
     }
@@ -127,11 +133,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     @Override
     public OutputModelObject visitBlockStat(@NotNull JParser.BlockStatContext ctx) {
-        Block block  = new Block();
-        List<JParser.BlockStatementContext> blockstats = new ArrayList<JParser.BlockStatementContext>();
-        for(JParser.BlockStatementContext bs : ctx.block().blockStatement())
-            block.statements.add(visitBlockStatement(bs));
-        return block;
+        return visit(ctx.block());
     }
 
     @Override
@@ -139,8 +141,14 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         pushScope(ctx.scope);
         Block block  = new Block();
         List<JParser.BlockStatementContext> blockstats = new ArrayList<JParser.BlockStatementContext>();
-        for(JParser.BlockStatementContext bs : ctx.blockStatement())
-            block.statements.add(visitBlockStatement(bs));
+        for(JParser.BlockStatementContext bs : ctx.blockStatement()){
+            if(visitBlockStatement(bs) instanceof VarDef){
+                if(block.declarations == null)
+                    block.declarations = new ArrayList<>();
+                block.declarations.add((VarDef) visitBlockStatement(bs));
+            } else
+                block.statements.add((Stat)visitBlockStatement(bs));
+        }
         popScope();
         return block;
     }
