@@ -83,7 +83,11 @@ PrintStat(p,args)   ::= "printf(<p.str>, <args;separator=\", \">);"
 CallStat(c,call)    ::= ""
 CtorCall(ctor)      ::= "((<ctor.ctor> *)alloc(&<ctor.ctor>_metadata))"
 ReturnStat(r,expr)  ::= "return <expr>;"
-WhileStat(w,condition, block) ::= "while ( <condition> ) {       <\n><block>     <\n>}"
+WhileStat(w,condition, block) ::= <<
+while ( <condition> ) {
+<block>
+}
+>>
 IfStat(i,condition, statement) ::= "if ( <condition> ) <statement> "
 IfElseStat(i,condition, statement, elseStatement) ::= <<
 if ( <condition> ) <statement>
