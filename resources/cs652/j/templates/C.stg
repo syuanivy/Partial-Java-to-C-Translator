@@ -80,7 +80,6 @@ PrimitiveTypeSpec(p)::= "<p.typeName>"
 AssignStat(a,left,right) ::= "<left> = <right>;"
 PrintStringStat(p)  ::= "printf(<p.str>);"
 PrintStat(p,args)   ::= "printf(<p.str>, <args;separator=\", \">);"
-CallStat(c,call)    ::= ""
 CtorCall(ctor)      ::= "((<ctor.ctor> *)alloc(&<ctor.ctor>_metadata))"
 ReturnStat(r,expr)  ::= "return <expr>;"
 WhileStat(w,condition, block) ::= <<
@@ -93,6 +92,7 @@ IfElseStat(i,condition, statement, elseStatement) ::= <<
 if ( <condition> ) <statement>
 else <elseStatement>
 >>
+ExprStat(es, expr) ::= "<expr>;"
 
 NullRef(n)          ::= "NULL"
 

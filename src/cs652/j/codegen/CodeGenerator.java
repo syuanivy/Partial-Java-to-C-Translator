@@ -215,7 +215,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     @Override
     public OutputModelObject visitStatExpr(@NotNull JParser.StatExprContext ctx) {
-        return visit(ctx.statementExpression().expression());
+        return new ExprStat((Expr)visit(ctx.statementExpression().expression()));
     }
 
     @Override
