@@ -23,7 +23,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 	public String fileName;
 
 	public Scope currentScope = null;
-	public JClass currentClass;
+	public JClass currentClass = null;
 
 	public CodeGenerator(String fileName) {
 		this.fileName = fileName;
@@ -143,7 +143,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         Block block  = new Block();
         List<JParser.BlockStatementContext> blockstats = new ArrayList<JParser.BlockStatementContext>();
         for(JParser.BlockStatementContext bs : ctx.blockStatement())
-            block.statements.add((Stat)visitBlockStatement(bs));
+            block.statements.add(visitBlockStatement(bs));
         popScope();
         return block;
     }
@@ -268,6 +268,8 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         //a.b  entity = varRef a
         if(visit(ctx.expression()) instanceof VarRef)
             fieldRef.entity = (VarRef)visit(ctx.expression());
+        else if(visit(ctx.expression()) instanceof ThisRef)
+            fieldRef.entity = new VarRef("this");
         //a.b.   c-->varField entity = FieldRef a.b
         else
             fieldRef.entity = (FieldRef) visit(ctx.expression());
@@ -277,19 +279,23 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     @Override
     public OutputModelObject visitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx) {
         MethodCall call = new MethodCall();
-        if(ctx.expression() instanceof JParser.DotExprContext){ // this is for sure
+        if(ctx.expression() instanceof JParser.DotExprContext){ //a.foo() or a.b.c.foo()
             FieldRef callExpr = (FieldRef) visit(ctx.expression()) ; // for sure
             String f = callExpr.varRef; //function name
             call.receiver = callExpr.entity;
-
-            call.recType = new ObjectTypeSpec(((JVar)currentScope.resolve(call.receiver.varRef)).getType().getName());
+            if(call.receiver.varRef.equals("this"))
+                call.recType = new ObjectTypeSpec(getThisClass(currentScope).getName());
+            else
+                call.recType = new ObjectTypeSpec(((JVar)currentScope.resolve(call.receiver.varRef)).getType().getName());
+            call.funcName = new FuncName(call.recType.typeName+"_"+f);//name of the method, the D in a.b.c. D
+        }else{    //within method declaration, foo();
+            String f =((VarRef)visit(ctx.expression())).varRef;
+            call.receiver = new VarRef("this");
+            call.recType = new ObjectTypeSpec(getThisClass(currentScope).getName());
             call.funcName = new FuncName(call.recType.typeName+"_"+f);//name of the method, the D in a.b.c. D
         }
-
         call.funcPtrType.retType  = getTypeSpec(ctx.expressionType);
-
         call.funcPtrType.argTypes.add(call.recType);
-
         String thisArg = "(("+call.recType.typeName+" *)"+call.receiver.varRef+")";
 
         call.args.add(new VarRef(thisArg));
@@ -297,8 +303,17 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         if(ctx.expressionList() == null)
             return call;
         for(JParser.ExpressionContext arg : ctx.expressionList().expression()){
-            call.args.add((Expr)visit(arg));
-            call.funcPtrType.argTypes.add(getTypeSpec(arg.expressionType));
+            TypeSpec argType = getTypeSpec(arg.expressionType);
+            if(arg instanceof JParser.NewExprContext)
+                call.args.add((Expr)visit(arg));
+            else if(argType instanceof ObjectTypeSpec){
+                String a = "("+argType.typeName+" *)"+((VarRef)visit(arg)).varRef+")";
+                call.args.add(new VarRef(a));
+
+            }else{
+                call.args.add((Expr)visit(arg));
+            }
+            call.funcPtrType.argTypes.add(argType);
         }
         return call;
     }
@@ -324,5 +339,13 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     private void popScope() {
         System.out.println("leaving: "+currentScope.getScopeName());
         currentScope = currentScope.getEnclosingScope();
+    }
+    private JClass getThisClass(Scope s){
+        while(s != null){
+            if(s instanceof JClass)
+                return (JClass) s;
+            s = s.getEnclosingScope();
+        }
+        return null;
     }
 }
