@@ -28,7 +28,7 @@ public class JTran {
 			System.err.println("$ java cs601.j.JTran [-print] [-tree] [-inspect] [-o output-file] file.j");
 			return;
 		}
-		String C_fileName = null;
+/*		String C_fileName = null;
 		String fileName;
 		boolean print = false;
 		boolean gui = false;
@@ -63,11 +63,11 @@ public class JTran {
 					break label;
 			}
 		}
-        new JTran().translate(fileName, C_fileName,true, gui, inspect);
+        new JTran().translate(fileName, C_fileName,true, gui, inspect);*/
 
 
 
-       /* //Test all;
+        //Test all;
         String path = "tests/cs652/j";
         File file = new File(path);
         File[] array = file.listFiles();
@@ -78,11 +78,12 @@ public class JTran {
                 System.out.println(a[0]);
                 new JTran().translateAll(path1);
             }
-        }*/
+        }
 		}
 
     public void translateAll(String fileName)
             throws IOException {
+        System.out.println("**************"+fileName+"*****************");
         ANTLRInputStream input = new ANTLRFileStream(fileName);
         JLexer l = new JLexer(input);
         TokenStream tokens = new CommonTokenStream(l);
@@ -90,17 +91,26 @@ public class JTran {
         JParser parser = new JParser(tokens);
         ParserRuleContext tree = parser.file();
 
-        System.out.println("Define Scope and Symbols: ");
 
         DefineScopesAndSymbols def = new DefineScopesAndSymbols(globals);
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(def, tree);
 
-        System.out.println("Compute Types: ");
 
         ComputeTypes computeTypes = new ComputeTypes(globals);
         walker = new ParseTreeWalker();
         walker.walk(computeTypes, tree);
+
+        CodeGenerator gen = new CodeGenerator(fileName);
+        CFile file = gen.generate(tree);
+
+
+        ModelConverter converter = new ModelConverter(gen.templates);
+        ST fileST = converter.walk(file);
+
+        String C_code = fileST.render();
+
+        System.out.println(C_code);
     }
 
 
@@ -116,13 +126,11 @@ public class JTran {
 		JParser parser = new JParser(tokens);
 		ParserRuleContext tree = parser.file();
 
-        System.out.println("Define Scope and Symbols: ");
 
 		DefineScopesAndSymbols def = new DefineScopesAndSymbols(globals);
 		ParseTreeWalker walker = new ParseTreeWalker();
 		walker.walk(def, tree);
 
-        System.out.println("Compute Types: ");
 
 		ComputeTypes computeTypes = new ComputeTypes(globals);
 		walker = new ParseTreeWalker();

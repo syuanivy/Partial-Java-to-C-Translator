@@ -50,7 +50,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
         //inherit fields from parents
         for(FieldSymbol f : ctx.scope.getFields()){
-            ParaDef p = new ParaDef(f.getName());
+            VarDef p = new VarDef(f.getName());
             p.typeSpec = getTypeSpec(f.getType());
             c.fields.add(p);
         }
@@ -388,11 +388,9 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     private void pushScope(Scope s) {
         currentScope = s;
-        System.out.println("visiting: "+currentScope.getScopeName());
     }
 
     private void popScope() {
-        System.out.println("leaving: "+currentScope.getScopeName());
         currentScope = currentScope.getEnclosingScope();
     }
     private JClass getThisClass(Scope s){

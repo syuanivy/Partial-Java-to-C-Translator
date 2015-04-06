@@ -71,7 +71,7 @@ Block(block, declarations,statements) ::= <<
 >>
 
 VarDef(var, typeSpec)   ::= "<typeSpec> <var.varName>;"
-ParaDef(var, typeSpec) ::= "<typeSpec> <var.varName>;"
+ParaDef(var, typeSpec) ::= "<typeSpec> <var.varName>"
 
 FuncName(f)         ::= "<f.className>_<f.methodName>"
 Define(def)         ::= "<def.className>_<def.methodName>_SLOT <def.slot>"
