@@ -93,6 +93,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         pushScope(ctx.scope);
         MethodDef method = (MethodDef)visitMethodDeclaration(ctx);
         method.receiver = new VarRef(receiverClass);
+        method.methodName.className = receiverClass;
         method.parameters.get(0).typeSpec = new PrimitiveTypeSpec(receiverClass); //cheat too make *this, it's actually ObjectTypeSpec
         popScope();
         return method;

@@ -45,7 +45,7 @@ metadata <class.className>_metadata = {"<class.className>", sizeof(<class.classN
 >>
 
 MethodDef(m,methodName, retType,parameters,body,slot,receiver) ::= <<
-<retType> <receiver>_<methodName>(<parameters;separator = ", ">)
+<retType> <methodName>(<parameters;separator = ", ">)
 {
 <body>
 }

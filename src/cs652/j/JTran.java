@@ -28,7 +28,7 @@ public class JTran {
 			System.err.println("$ java cs601.j.JTran [-print] [-tree] [-inspect] [-o output-file] file.j");
 			return;
 		}
-/*		String C_fileName = null;
+		String C_fileName = null;
 		String fileName;
 		boolean print = false;
 		boolean gui = false;
@@ -63,11 +63,11 @@ public class JTran {
 					break label;
 			}
 		}
-        new JTran().translate(fileName, C_fileName,true, gui, inspect);*/
+        new JTran().translate(fileName, C_fileName,print, gui, inspect);
 
 
 
-        //Test all;
+/*        //Test all;
         String path = "tests/cs652/j";
         File file = new File(path);
         File[] array = file.listFiles();
@@ -78,7 +78,7 @@ public class JTran {
                 System.out.println(a[0]);
                 new JTran().translateAll(path1);
             }
-        }
+        }*/
 		}
 
     public void translateAll(String fileName)
@@ -144,10 +144,10 @@ public class JTran {
 		ST fileST = converter.walk(file);
 
 		String C_code = fileST.render();
-		//org.antlr.v4.runtime.misc.Utils.writeFile(C_fileName, C_code);
+	//	org.antlr.v4.runtime.misc.Utils.writeFile(C_fileName, C_code);
 
 
-		if ( print ) System.out.println(C_code);
+		if ( true ) System.out.println(C_code);
 
 		if ( gui ) tree.inspect(parser);
 
