@@ -310,8 +310,11 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         if(ctx.expression() instanceof JParser.PrimaryExprContext){//foo
             String f =((VarRef)visit(ctx.expression())).varRef; //"foo"
             call.receiver = new ThisRef(); //this
-            call.recType = typeOfThis(); //T
+            JClass c = getThisClass(currentScope);
+            JMethod m = (JMethod) c.resolve(f);
+            call.recType = new ObjectTypeSpec(m.getEnclosingScope().getScopeName()); //T
             call.funcName = new FuncName(f); //foo
+            call.funcName.className = c.getName();
         // "a.b.c.foo()", a method call with explicit receiver object
         }else if (ctx.expression() instanceof JParser.DotExprContext){ //a.b.c.foo
             FieldRef callExpr = (FieldRef) visit(ctx.expression()) ; //a.b.c->entity, foo->varRef
@@ -322,8 +325,8 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
             String r = m.getEnclosingScope().getScopeName();// get its enclosing scope name
             call.recType = new ObjectTypeSpec(r);//receiver type of the method
             call.receiver = callExpr.entity; //a.b.c
+            call.funcName.className = rec.getName(); //T_foo
         }
-        call.funcName.className = call.recType.typeName; //T_foo
         call.funcPtrType.retType  = getTypeSpec(ctx.expressionType); //type of a.b.c.foo()
 
         /*Handle "this", Add the receiver and receiver type to args and funcPtrType.argTypes*/
@@ -347,7 +350,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         for(JParser.ExpressionContext arg : ctx.expressionList().expression()){
             Expr a = (Expr)visit(arg);
             TypeSpec t = getTypeSpec(arg.expressionType);
-            if(t instanceof ObjectTypeSpec){
+            if(t instanceof ObjectTypeSpec && !(arg instanceof JParser.NewExprContext)){
                 TypeCast c = new TypeCast(t);
                 c.expr = a;
                 call.args.add(c);
@@ -367,10 +370,6 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         }
     }
 
-    public ObjectTypeSpec typeOfThis(){
-        String name = getThisClass(currentScope).getName();
-        return new ObjectTypeSpec(name);
-    }
 
 
     public TypeSpec getTypeSpec(Type type){

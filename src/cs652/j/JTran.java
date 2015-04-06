@@ -144,10 +144,10 @@ public class JTran {
 		ST fileST = converter.walk(file);
 
 		String C_code = fileST.render();
-	//	org.antlr.v4.runtime.misc.Utils.writeFile(C_fileName, C_code);
+		org.antlr.v4.runtime.misc.Utils.writeFile(C_fileName, C_code);
 
 
-		if ( true ) System.out.println(C_code);
+		if ( print ) System.out.println(C_code);
 
 		if ( gui ) tree.inspect(parser);
 
