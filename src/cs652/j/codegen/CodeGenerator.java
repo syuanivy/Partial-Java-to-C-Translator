@@ -1,7 +1,5 @@
 package cs652.j.codegen;
 
-import com.sun.codemodel.internal.ClassType;
-import cs652.j.JTran;
 import cs652.j.codegen.model.*;
 import cs652.j.parser.JBaseVisitor;
 import cs652.j.parser.JParser;
@@ -63,15 +61,22 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
                 c.methods.add((MethodDef)visitMethodDeclarationHelper(m, c.className));
         }
         //get define and vtable info, define use current class and vtable use enclosing class
+        Define[] defs = new Define[ctx.scope.getNumberOfVisibleMethods()];
+        FuncName[] vRefs = new FuncName[ctx.scope.getNumberOfVisibleMethods()];
         for(MethodSymbol m : ctx.scope.getVisibleMethods()){
+
             Define def = new Define(m.getName());
             def.className = c.className;
             def.slot = m.getSlotNumber();
-            c.define.add(def);
 
             FuncName v = new FuncName(m.getName());
             v.className = m.getEnclosingScope().getScopeName();
-            c.vtable.add(v);
+            defs[def.slot] = def;
+            vRefs[def.slot] = v;
+        }
+        for(int i = 0; i< defs.length; i++){
+            c.define.add(defs[i]);
+            c.vtable.add(vRefs[i]);
         }
         popScope();
         return c;
