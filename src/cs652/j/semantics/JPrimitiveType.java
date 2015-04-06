@@ -14,6 +14,7 @@ public class JPrimitiveType extends PrimitiveType implements Symbol {
         super(name);
     }
 
+	// you should remove these unnecessary methods
     @Override
     public Scope getScope() {
         return null;

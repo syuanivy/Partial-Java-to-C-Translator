@@ -122,6 +122,24 @@ parExpression
 statementExpression
     :   expression
     ;
+
+    /* you don't have to change this, but I find it more convenient to put everything in one
+     rule with alternative labels:
+
+     expression returns [Type type]
+         :   expression '.' ID                                   # FieldRef
+         |   expression '.' ID '(' expressionList? ')'           # QMethodCall
+         |   'new' ID '(' ')'                                    # CtorCall
+         |   ID '(' expressionList? ')'                          # MethodCall
+         |   '(' expression ')'                                  # Parens
+         |   'this'                                              # ThisRef
+         |   INT                                                 # LiteralRef
+         |   FLOAT                                               # LiteralRef
+         |   ID                                                  # IdRef
+         |   'null'                                              # NullRef
+         ;
+*/
+
 //expression
 expression returns [Type expressionType]
     :   primary #primaryExpr
@@ -143,6 +161,7 @@ creator
     : type '('')';
 
 
+// there is too much parsing so to speak in your listener so perhaps add alternative labels here
 literal
     :   IntegerLiteral
     |   FloatPointLiteral

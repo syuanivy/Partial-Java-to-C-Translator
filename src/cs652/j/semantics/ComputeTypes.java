@@ -2,7 +2,11 @@ package cs652.j.semantics;
 
 
 import cs652.j.parser.JParser;
-import org.antlr.symbols.*;
+import org.antlr.symbols.GlobalScope;
+import org.antlr.symbols.Scope;
+import org.antlr.symbols.Symbol;
+import org.antlr.symbols.Type;
+import org.antlr.symbols.TypedSymbol;
 import org.antlr.v4.runtime.misc.NotNull;
 
 
@@ -36,6 +40,8 @@ public class ComputeTypes extends SetScopes {
            // System.out.println(ctx.expression().getText()+ "." + ctx.dotID.getText() + " resolved to be " + t.getType().getName());
         }
     }
+
+	// please add alternative labels to your grammar so that you don't have to parse here in your listener
 
     @Override
     public void exitPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx) {
