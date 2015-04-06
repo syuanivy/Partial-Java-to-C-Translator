@@ -60,7 +60,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         for (JParser.ClassBodyDeclarationContext b : ctx.classBody().classBodyDeclaration()){
             JParser.MethodDeclarationContext m = b.memberDeclaration().methodDeclaration();
             if(m != null)
-                c.methods.add((MethodDef)visitMethodDeclaration(m));
+                c.methods.add((MethodDef)visitMethodDeclarationHelper(m, c.className));
         }
         //get define and vtable info, define use current class and vtable use enclosing class
         for(MethodSymbol m : ctx.scope.getVisibleMethods()){
@@ -311,7 +311,10 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
             FieldRef callExpr = (FieldRef) visit(ctx.expression()) ; //a.b.c->entity, foo->varRef
             call.funcName = new FuncName(callExpr.varRef); //foo
             Type rec = ((JParser.DotExprContext) ctx.expression()).expression().expressionType;//type of a.b.c
-            call.recType = (ObjectTypeSpec)getTypeSpec(rec);//T
+            JClass current = (JClass) currentScope.resolve(rec.getName()); //resolve c type
+            JMethod m = (JMethod) current.resolve(call.funcName.methodName); //resolve method from c type
+            String r = m.getEnclosingScope().getScopeName();// get its enclosing scope name
+            call.recType = new ObjectTypeSpec(r);//receiver type of the method
             call.receiver = callExpr.entity; //a.b.c
         }
         call.funcName.className = call.recType.typeName; //T_foo

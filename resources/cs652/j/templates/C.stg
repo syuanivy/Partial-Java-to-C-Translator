@@ -18,8 +18,9 @@ object *alloc(metadata *clazz) {
     return p;
 }
 
-<classes;separator="\n">
 
+
+<classes;separator="\n">
 <main>
 >>
 
@@ -30,15 +31,13 @@ typedef struct {
     <fields;separator="\n">
 } <class.className>;
 
-<define:{d|#define <d.className>_<d.methodName>_SLOT <d.slot>};separator="\n">
-<methods:{m|#define <class.className>_<m.methodName>_SLOT <m.slot>};separator="\n">
+<define:{d|#define <d>};separator="\n">
 
 
 <methods; separator="\n">
 
 void (*<class.className>_vtable[])() = {
     <vtable:{v|(void(*)())&<v>};separator=",\n">
-    <methods:{m|(void(*)())&<m.receiver>_<m.methodName>};separator=",\n">
 };
 
 metadata <class.className>_metadata = {"<class.className>", sizeof(<class.className>), &<class.className>_vtable};
@@ -72,9 +71,10 @@ Block(block, declarations,statements) ::= <<
 >>
 
 VarDef(var, typeSpec)   ::= "<typeSpec> <var.varName>;"
-ParaDef(var, typeSpec) ::= "<typeSpec> <var.varName>"
+ParaDef(var, typeSpec) ::= "<typeSpec> <var.varName>;"
 
 FuncName(f)         ::= "<f.className>_<f.methodName>"
+Define(def)         ::= "<def.className>_<def.methodName>_SLOT <def.slot>"
 
 ObjectTypeSpec(o)   ::= "<o.typeName> *"
 PrimitiveTypeSpec(p)::= "<p.typeName>"
@@ -103,7 +103,7 @@ VarRef(v)           ::= "<v.varRef>"
 FieldRef(f, entity) ::= "<entity>-><f.varRef>"
 ThisRef(t)          ::= "this"
 MethodCall(m, funcName,funcPtrType, receiver, recType, args) ::= <<
-<funcPtrType>(*(<receiver>)->clazz->_vtable)[<funcName>_SLOT])(<args;separator=",">);
+<funcPtrType>(*(<receiver>)->clazz->_vtable)[<funcName>_SLOT])(<args;separator=",">)
 >>
 
 FuncPtrType(f, retType, argTypes) ::= "(*(<retType> (*)(<argTypes;separator=\",\">))"
