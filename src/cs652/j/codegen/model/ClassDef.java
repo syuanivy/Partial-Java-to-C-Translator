@@ -12,6 +12,8 @@ public class ClassDef extends OutputModelObject{
     public String superClass = null;
     @ModelElement public List<VarDef> fields = new ArrayList<VarDef>();
     @ModelElement public List<MethodDef> methods = new ArrayList<MethodDef>();
+    @ModelElement public List<Define> define = new ArrayList<>();
+    @ModelElement public List<FuncName> vtable = new ArrayList<>();
 
 
     public ClassDef(String className) {

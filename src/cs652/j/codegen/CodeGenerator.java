@@ -47,18 +47,31 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     @Override
     public OutputModelObject visitClassDeclaration(@NotNull JParser.ClassDeclarationContext ctx) {
-        pushScope(ctx.scope);
         ClassDef c = new ClassDef(ctx.Identifier().getText());
-        if(ctx.type() != null)
-            c.setSuperClass(ctx.type().getText());
-        List<JParser.ClassBodyDeclarationContext> bodies = ctx.classBody().classBodyDeclaration();
-        for(JParser.ClassBodyDeclarationContext member: bodies ){
-            JParser.FieldDeclarationContext field = member.memberDeclaration().fieldDeclaration();
-            JParser.MethodDeclarationContext method = member.memberDeclaration().methodDeclaration();
-            if(field != null)
-                c.fields.add((VarDef)visitFieldDeclaration(field));
-            else
-                c.methods.add((MethodDef)visitMethodDeclarationHelper(method, ctx.Identifier().getText()));
+        pushScope(ctx.scope);
+
+        //inherit fields from parents
+        for(FieldSymbol f : ctx.scope.getFields()){
+            ParaDef p = new ParaDef(f.getName());
+            p.typeSpec = getTypeSpec(f.getType());
+            c.fields.add(p);
+        }
+        //get all methods from the current class
+        for (JParser.ClassBodyDeclarationContext b : ctx.classBody().classBodyDeclaration()){
+            JParser.MethodDeclarationContext m = b.memberDeclaration().methodDeclaration();
+            if(m != null)
+                c.methods.add((MethodDef)visitMethodDeclaration(m));
+        }
+        //get define and vtable info, define use current class and vtable use enclosing class
+        for(MethodSymbol m : ctx.scope.getVisibleMethods()){
+            Define def = new Define(m.getName());
+            def.className = c.className;
+            def.slot = m.getSlotNumber();
+            c.define.add(def);
+
+            FuncName v = new FuncName(m.getName());
+            v.className = m.getEnclosingScope().getScopeName();
+            c.vtable.add(v);
         }
         popScope();
         return c;

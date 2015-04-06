@@ -1,9 +1,12 @@
 package org.antlr.symbols;
 
+import cs652.j.codegen.model.VarDef;
 import cs652.j.semantics.JClass;
+import cs652.j.semantics.JField;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ClassSymbol extends DataAggregateSymbol {
@@ -87,6 +90,20 @@ public class ClassSymbol extends DataAggregateSymbol {
 		}
 		return n;
 	}
+
+    public Set<FieldSymbol> getFields(){
+        Set<FieldSymbol> fields = new LinkedHashSet<>();
+        if(getParentScope() instanceof JClass){
+            JClass parentScope = (JClass)getParentScope();
+            fields.addAll(parentScope.getFields());
+        }
+
+        for (MemberSymbol s : getSymbols()) {
+            if ( s instanceof FieldSymbol )
+                fields.add((FieldSymbol)s);
+        }
+        return fields;
+    }
 
 	@Override
 	public String toString() {

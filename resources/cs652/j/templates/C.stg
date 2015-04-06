@@ -23,19 +23,21 @@ object *alloc(metadata *clazz) {
 <main>
 >>
 
-ClassDef(class, fields, methods) ::= <<
+ClassDef(class, fields, methods, define, vtable) ::= <<
 // D e f i n e  C l a s s  <class.className>
 typedef struct {
     metadata *clazz;
     <fields;separator="\n">
 } <class.className>;
 
+<define:{d|#define <d.className>_<d.methodName>_SLOT <d.slot>};separator="\n">
 <methods:{m|#define <class.className>_<m.methodName>_SLOT <m.slot>};separator="\n">
 
 
 <methods; separator="\n">
 
 void (*<class.className>_vtable[])() = {
+    <vtable:{v|(void(*)())&<v>};separator=",\n">
     <methods:{m|(void(*)())&<m.receiver>_<m.methodName>};separator=",\n">
 };
 
