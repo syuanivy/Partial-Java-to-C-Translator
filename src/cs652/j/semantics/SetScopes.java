@@ -11,7 +11,7 @@ public class SetScopes extends JBaseListener{
     public static final Type JPrimitive_INT = new JPrimitiveType("int");
     public static final Type JPrimitive_FLOAT = new JPrimitiveType("float");
     public static final Type JPrimitive_VOID = new JPrimitiveType("void");
-    public static final JMethod JMethod_Printf = new JMethod("printf",null);
+
     public SetScopes(){}
 
 
@@ -35,14 +35,11 @@ public class SetScopes extends JBaseListener{
         popScope();
     }
 
+    @Override
+    public void enterMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx) {pushScope(ctx.scope);}
 
-
-    @Override public void enterMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx) {
-        pushScope(ctx.scope);
-    }
-
-
-    @Override public void exitMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx) {
+    @Override
+    public void exitMethodDeclaration(@NotNull JParser.MethodDeclarationContext ctx) {
         popScope();
     }
 
@@ -59,11 +56,9 @@ public class SetScopes extends JBaseListener{
 
     protected void pushScope(Scope s) {
         currentScope = s;
-     //   System.out.println("entering: "+currentScope.getScopeName());
     }
 
     protected void popScope() {
-     //   System.out.println("leaving: "+currentScope.getScopeName());
         currentScope = currentScope.getEnclosingScope();
     }
 

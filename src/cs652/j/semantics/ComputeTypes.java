@@ -1,6 +1,5 @@
 package cs652.j.semantics;
 
-
 import cs652.j.parser.JParser;
 import org.antlr.symbols.GlobalScope;
 import org.antlr.symbols.Scope;
@@ -37,56 +36,41 @@ public class ComputeTypes extends SetScopes {
             Symbol id = c.resolve(name);
             TypedSymbol t = (TypedSymbol) id;
             ctx.expressionType = t.getType();
-           // System.out.println(ctx.expression().getText()+ "." + ctx.dotID.getText() + " resolved to be " + t.getType().getName());
         }
     }
 
-	// please add alternative labels to your grammar so that you don't have to parse here in your listener
+    //this, int, float, string, Identifier, null
+    @Override
+    public void exitThisExpr(@NotNull JParser.ThisExprContext ctx) {
+        JClass c = getThisClass(currentScope);
+        ctx.expressionType = c;
+    }
 
     @Override
-    public void exitPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx) {
-        //this
-        if(ctx.primary().getText().equals("this")){
-            JClass c = getThisClass(currentScope);
-            ctx.expressionType = c;
-           // System.out.println("\"this\" resolved to be " + c.getName());
-        }
+    public void exitIntLiteralExpr(@NotNull JParser.IntLiteralExprContext ctx) {
+        ctx.expressionType = JPrimitive_INT;
+    }
 
-        //literal
-        else if(ctx.primary().literal() != null){
-            if(ctx.primary().literal().IntegerLiteral() != null){
-                ctx.expressionType = JPrimitive_INT;
-            /*    System.out.println(ctx.primary().literal().IntegerLiteral().getText()+
-                        " resolved to be " +
-                        JPrimitive_INT.getName());*/
+    @Override
+    public void exitFloatLiteralExpr(@NotNull JParser.FloatLiteralExprContext ctx) {
+        ctx.expressionType = JPrimitive_FLOAT;
+    }
 
-            }
-            if(ctx.primary().literal().FloatPointLiteral() != null){
-                ctx.expressionType = JPrimitive_FLOAT;
-             //   System.out.println(ctx.primary().literal().FloatPointLiteral().getText()+" resolved to be " + JPrimitive_FLOAT.getName());
-            }
+    @Override
+    public void exitStringLiteralExpr(@NotNull JParser.StringLiteralExprContext ctx) {
+        ctx.expressionType = JPrimitive_String;
+    }
 
-            if(ctx.primary().literal().StringLiteral() != null){
-                ctx.expressionType = JPrimitive_String;
-             //   System.out.println(ctx.primary().literal().StringLiteral().getText()+" resolved to be " + JPrimitive_String.getName());
-            }
+    @Override
+    public void exitNullExpr(@NotNull JParser.NullExprContext ctx) {
+        ctx.expressionType = JPrimitive_VOID;
+    }
 
-            if(ctx.primary().literal().getText().equals("null")){
-                ctx.expressionType = JPrimitive_VOID;
-             //   System.out.println("\"null\" resolved to be " + JPrimitive_VOID);
-            }
-
-        }
-
-        //Identifier
-        else if(ctx.primary().Identifier() != null){
-            Symbol s = currentScope.resolve(ctx.primary().Identifier().getText());
-            if(s != null){
-                ctx.expressionType = ((TypedSymbol)s).getType();
-            //    System.out.println(ctx.primary().Identifier().getText()+" resolved to be " +   ((TypedSymbol)s).getType().getName());
-            }
-
-        }
+    @Override
+    public void exitIdentifierExpr(@NotNull JParser.IdentifierExprContext ctx) {
+        Symbol s = currentScope.resolve(ctx.Identifier().getText());
+        if(s != null)
+            ctx.expressionType = ((TypedSymbol)s).getType();
     }
 
     public JClass getThisClass(Scope s){

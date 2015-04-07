@@ -4,6 +4,7 @@ import cs652.j.codegen.model.*;
 import cs652.j.parser.JBaseVisitor;
 import cs652.j.parser.JParser;
 import cs652.j.semantics.*;
+
 import org.antlr.symbols.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -18,7 +19,6 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 	public String fileName;
 
 	public Scope currentScope = null;
-	public JClass currentClass = null;
 
 	public CodeGenerator(String fileName) {
 		this.fileName = fileName;
@@ -159,7 +159,6 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     public OutputModelObject visitBlock(@NotNull JParser.BlockContext ctx) {
         pushScope(ctx.scope);
         Block block  = new Block();
-        List<JParser.BlockStatementContext> blockstats = new ArrayList<JParser.BlockStatementContext>();
         for(JParser.BlockStatementContext bs : ctx.blockStatement()){
             if(visitBlockStatement(bs) instanceof VarDef){
                 if(block.declarations == null)
@@ -174,7 +173,6 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
 
     @Override
     public OutputModelObject visitBlockStatement(@NotNull JParser.BlockStatementContext ctx) {
-
         JParser.LocalVariableDeclarationStatementContext localVarStat = ctx.localVariableDeclarationStatement();
         if(localVarStat != null)
             return visitLocalVariableDeclaration(localVarStat.localVariableDeclaration());
@@ -233,7 +231,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     }
 
     @Override
-    public OutputModelObject visitStatExpr(@NotNull JParser.StatExprContext ctx) {
+    public OutputModelObject visitExprStat(@NotNull JParser.ExprStatContext ctx) {
         return new ExprStat((Expr)visit(ctx.statementExpression().expression()));
     }
 
@@ -254,49 +252,46 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     }
 
     @Override
-    public OutputModelObject visitPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx) {
-        //this
-        if(ctx.primary().getText().equals("this")){
-            return new ThisRef();
-        }
+    public OutputModelObject visitThisExpr(@NotNull JParser.ThisExprContext ctx) {
+        return new ThisRef();
+    }
 
-        //literal
-        else if(ctx.primary().literal() != null){
-            String literal;
-            if(ctx.primary().literal().IntegerLiteral() != null)
-                literal = ctx.primary().literal().IntegerLiteral().getText();
-            else if(ctx.primary().literal().FloatPointLiteral() != null)
-                literal = ctx.primary().literal().FloatPointLiteral().getText();
-            else if(ctx.primary().literal().StringLiteral() != null)
-                literal = ctx.primary().literal().StringLiteral().getText();
-            else
-                return new NullRef();
-            return new LiteralRef(literal);
-        }
+    @Override
+    public OutputModelObject visitIntLiteralExpr(@NotNull JParser.IntLiteralExprContext ctx) {
+        return new LiteralRef(ctx.IntegerLiteral().getText());
+    }
 
-        //Identifier
-        else if(ctx.primary().Identifier() != null){
-            if(currentScope.resolve(ctx.primary().Identifier().getText()) instanceof  JField){
-                FieldRef field = new FieldRef(ctx.primary().Identifier().getText());
-                field.entity = new VarRef("this");
-                return field;
-            }
-            return new VarRef(ctx.primary().Identifier().getText());
+    @Override
+    public OutputModelObject visitFloatLiteralExpr(@NotNull JParser.FloatLiteralExprContext ctx) {
+        return new LiteralRef(ctx.FloatPointLiteral().getText());
+    }
+
+    @Override
+    public OutputModelObject visitIdentifierExpr(@NotNull JParser.IdentifierExprContext ctx) {
+        String s = ctx.Identifier().getText();
+        if(currentScope.resolve(s) instanceof  JField){
+            FieldRef fieldRef = new FieldRef(s);
+            fieldRef.entity = new ThisRef();
+            return  fieldRef;
         }
-        return super.visitPrimaryExpr(ctx);
+        return new VarRef(ctx.Identifier().getText());
+    }
+
+    @Override
+    public OutputModelObject visitNullExpr(@NotNull JParser.NullExprContext ctx) {
+        return new NullRef();
     }
 
     @Override
     public OutputModelObject visitDotExpr(@NotNull JParser.DotExprContext ctx) {
-        if(ctx.dotID == null)
-            return null;
         FieldRef fieldRef = new FieldRef(ctx.dotID.getText());
+        fieldRef.entity = (Expr)visit(ctx.expression());
         //a.b  entity = varRef a
         if(visit(ctx.expression()) instanceof VarRef)
             fieldRef.entity = (VarRef)visit(ctx.expression());
         else if(visit(ctx.expression()) instanceof ThisRef)
-            fieldRef.entity = new VarRef("this");
-        //a.b.   c-->varField entity = FieldRef a.b
+            fieldRef.entity = new ThisRef();
+        //a.b. c  varField entity = FieldRef a.b
         else
             fieldRef.entity = (FieldRef) visit(ctx.expression());
         return fieldRef;
@@ -307,7 +302,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         MethodCall call = new MethodCall();
         /*find functionName, receiver object and receiver type.*/
         //"foo()", a method call within another method declaration, implicit receiver "this"
-        if(ctx.expression() instanceof JParser.PrimaryExprContext){//foo
+        if(ctx.expression() instanceof JParser.IdentifierExprContext){//foo
             String f =((VarRef)visit(ctx.expression())).varRef; //"foo"
             call.receiver = new ThisRef(); //this
             JClass c = getThisClass(currentScope);
@@ -370,15 +365,12 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
         }
     }
 
-
-
-    public TypeSpec getTypeSpec(Type type){
+    private TypeSpec getTypeSpec(Type type){
         if(type instanceof JPrimitiveType)
             return new PrimitiveTypeSpec(type.getName());
         else
             return new ObjectTypeSpec(type.getName());
     }
-
 
     @Override
     public OutputModelObject visitNewExpr(@NotNull JParser.NewExprContext ctx) {
@@ -393,6 +385,7 @@ public class CodeGenerator extends JBaseVisitor<OutputModelObject> {
     private void popScope() {
         currentScope = currentScope.getEnclosingScope();
     }
+
     private JClass getThisClass(Scope s){
         while(s != null){
             if(s instanceof JClass)

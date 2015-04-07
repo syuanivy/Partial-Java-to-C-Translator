@@ -178,12 +178,12 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrintStat(@NotNull JParser.PrintStatContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code statExpr}
+	 * Visit a parse tree produced by the {@code exprStat}
 	 * labeled alternative in {@link JParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStatExpr(@NotNull JParser.StatExprContext ctx);
+	T visitExprStat(@NotNull JParser.ExprStatContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code assignStat}
 	 * labeled alternative in {@link JParser#statement}.
@@ -204,12 +204,33 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code floatLiteralExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloatLiteralExpr(@NotNull JParser.FloatLiteralExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code newExpr}
 	 * labeled alternative in {@link JParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitNewExpr(@NotNull JParser.NewExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code intLiteralExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIntLiteralExpr(@NotNull JParser.IntLiteralExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code nullExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNullExpr(@NotNull JParser.NullExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code dotExpr}
 	 * labeled alternative in {@link JParser#expression}.
@@ -225,12 +246,26 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code primaryExpr}
+	 * Visit a parse tree produced by the {@code thisExpr}
 	 * labeled alternative in {@link JParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx);
+	T visitThisExpr(@NotNull JParser.ThisExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringLiteralExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringLiteralExpr(@NotNull JParser.StringLiteralExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code identifierExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierExpr(@NotNull JParser.IdentifierExprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JParser#expressionList}.
 	 * @param ctx the parse tree
@@ -238,21 +273,9 @@ public interface JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpressionList(@NotNull JParser.ExpressionListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link JParser#primary}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPrimary(@NotNull JParser.PrimaryContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link JParser#creator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitCreator(@NotNull JParser.CreatorContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link JParser#literal}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLiteral(@NotNull JParser.LiteralContext ctx);
 }

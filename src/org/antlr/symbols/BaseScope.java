@@ -16,9 +16,6 @@ public abstract class BaseScope implements Scope {
 
 	public BaseScope(Scope enclosingScope) { setEnclosingScope(enclosingScope);	}
 
-	public Map<String, Symbol> getMembers() {
-		return symbols;
-	}
 
 	@Override
 	public Symbol getSymbol(String name) {
@@ -40,7 +37,6 @@ public abstract class BaseScope implements Scope {
 	public Symbol resolve(String name) {
 		Symbol s = symbols.get(name);
 		if ( s!=null ) {
-//			System.out.println("found "+name+" in "+this.asScopeStackString());
 			return s;
 		}
 		// if not here, check any enclosing scope
@@ -68,13 +64,6 @@ public abstract class BaseScope implements Scope {
 	/** Walk up enclosingScope until we find topmost. Note this is
 	 *  enclosing scope not necessarily parent.
 	 */
-	public Scope getOuterMostEnclosingScope() {
-		Scope s = this;
-		while ( s.getEnclosingScope()!=null ) {
-			s = s.getEnclosingScope();
-		}
-		return s;
-	}
 
 	@Override
 	public List<Scope> getEnclosingPathToRoot() {
@@ -113,12 +102,6 @@ public abstract class BaseScope implements Scope {
 		return symbols.size();
 	}
 
-	public List<Scope> getAllNestedScopes() {
-		List<Scope> scopes = new ArrayList<Scope>();
-		Utils.getAllNestedScopes(this, scopes);
-		return scopes;
-	}
-
 	@Override
 	public Set<String> getSymbolNames() {
 		return symbols.keySet();
@@ -126,21 +109,4 @@ public abstract class BaseScope implements Scope {
 
 	public String toString() { return symbols.keySet().toString(); }
 
-	public String asScopeStackString(String separator) {
-		return Utils.asScopeStackString(this, separator);
-	}
-
-	public String asQualifierString(String separator) {
-		return Utils.asScopeStackString(this, separator);
-	}
-
-	public String toTestString() {
-		return toTestString(", ", ".");
-	}
-
-	public String toTestString(String separator, String scopePathSeparator) {
-		List<? extends Symbol> allSymbols = this.getAllSymbols();
-		List<String> syms = Utils.map(allSymbols, s -> s.getScope().getScopeName() + scopePathSeparator + s.getName());
-		return Utils.join(syms, separator);
-	}
 }

@@ -285,17 +285,17 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitPrintStat(@NotNull JParser.PrintStatContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code statExpr}
+	 * Enter a parse tree produced by the {@code exprStat}
 	 * labeled alternative in {@link JParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void enterStatExpr(@NotNull JParser.StatExprContext ctx);
+	void enterExprStat(@NotNull JParser.ExprStatContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code statExpr}
+	 * Exit a parse tree produced by the {@code exprStat}
 	 * labeled alternative in {@link JParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void exitStatExpr(@NotNull JParser.StatExprContext ctx);
+	void exitExprStat(@NotNull JParser.ExprStatContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code assignStat}
 	 * labeled alternative in {@link JParser#statement}.
@@ -329,6 +329,18 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitStatementExpression(@NotNull JParser.StatementExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code floatLiteralExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterFloatLiteralExpr(@NotNull JParser.FloatLiteralExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code floatLiteralExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitFloatLiteralExpr(@NotNull JParser.FloatLiteralExprContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code newExpr}
 	 * labeled alternative in {@link JParser#expression}.
 	 * @param ctx the parse tree
@@ -340,6 +352,30 @@ public interface JListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNewExpr(@NotNull JParser.NewExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code intLiteralExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterIntLiteralExpr(@NotNull JParser.IntLiteralExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code intLiteralExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitIntLiteralExpr(@NotNull JParser.IntLiteralExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code nullExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterNullExpr(@NotNull JParser.NullExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code nullExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitNullExpr(@NotNull JParser.NullExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code dotExpr}
 	 * labeled alternative in {@link JParser#expression}.
@@ -365,17 +401,41 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitMethodCalExpr(@NotNull JParser.MethodCalExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code primaryExpr}
+	 * Enter a parse tree produced by the {@code thisExpr}
 	 * labeled alternative in {@link JParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx);
+	void enterThisExpr(@NotNull JParser.ThisExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code primaryExpr}
+	 * Exit a parse tree produced by the {@code thisExpr}
 	 * labeled alternative in {@link JParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx);
+	void exitThisExpr(@NotNull JParser.ThisExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code stringLiteralExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterStringLiteralExpr(@NotNull JParser.StringLiteralExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code stringLiteralExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitStringLiteralExpr(@NotNull JParser.StringLiteralExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code identifierExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdentifierExpr(@NotNull JParser.IdentifierExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code identifierExpr}
+	 * labeled alternative in {@link JParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdentifierExpr(@NotNull JParser.IdentifierExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JParser#expressionList}.
 	 * @param ctx the parse tree
@@ -387,16 +447,6 @@ public interface JListener extends ParseTreeListener {
 	 */
 	void exitExpressionList(@NotNull JParser.ExpressionListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link JParser#primary}.
-	 * @param ctx the parse tree
-	 */
-	void enterPrimary(@NotNull JParser.PrimaryContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JParser#primary}.
-	 * @param ctx the parse tree
-	 */
-	void exitPrimary(@NotNull JParser.PrimaryContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link JParser#creator}.
 	 * @param ctx the parse tree
 	 */
@@ -406,14 +456,4 @@ public interface JListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCreator(@NotNull JParser.CreatorContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link JParser#literal}.
-	 * @param ctx the parse tree
-	 */
-	void enterLiteral(@NotNull JParser.LiteralContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link JParser#literal}.
-	 * @param ctx the parse tree
-	 */
-	void exitLiteral(@NotNull JParser.LiteralContext ctx);
 }

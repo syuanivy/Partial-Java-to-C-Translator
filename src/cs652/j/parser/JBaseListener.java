@@ -333,13 +333,13 @@ public class JBaseListener implements JListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStatExpr(@NotNull JParser.StatExprContext ctx) { }
+	@Override public void enterExprStat(@NotNull JParser.ExprStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStatExpr(@NotNull JParser.StatExprContext ctx) { }
+	@Override public void exitExprStat(@NotNull JParser.ExprStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -381,6 +381,18 @@ public class JBaseListener implements JListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFloatLiteralExpr(@NotNull JParser.FloatLiteralExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFloatLiteralExpr(@NotNull JParser.FloatLiteralExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterNewExpr(@NotNull JParser.NewExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -388,6 +400,30 @@ public class JBaseListener implements JListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNewExpr(@NotNull JParser.NewExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIntLiteralExpr(@NotNull JParser.IntLiteralExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIntLiteralExpr(@NotNull JParser.IntLiteralExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNullExpr(@NotNull JParser.NullExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNullExpr(@NotNull JParser.NullExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -417,13 +453,37 @@ public class JBaseListener implements JListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx) { }
+	@Override public void enterThisExpr(@NotNull JParser.ThisExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPrimaryExpr(@NotNull JParser.PrimaryExprContext ctx) { }
+	@Override public void exitThisExpr(@NotNull JParser.ThisExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStringLiteralExpr(@NotNull JParser.StringLiteralExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStringLiteralExpr(@NotNull JParser.StringLiteralExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIdentifierExpr(@NotNull JParser.IdentifierExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIdentifierExpr(@NotNull JParser.IdentifierExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -441,18 +501,6 @@ public class JBaseListener implements JListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPrimary(@NotNull JParser.PrimaryContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPrimary(@NotNull JParser.PrimaryContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterCreator(@NotNull JParser.CreatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -460,18 +508,6 @@ public class JBaseListener implements JListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCreator(@NotNull JParser.CreatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterLiteral(@NotNull JParser.LiteralContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitLiteral(@NotNull JParser.LiteralContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

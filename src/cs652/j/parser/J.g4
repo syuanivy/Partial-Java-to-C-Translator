@@ -77,16 +77,17 @@ formalParameterList
 formalParameter
     :   type variableDeclarator
     ;
+
 //methodBody
 methodBody
     :   block
     ;
 
 // STATEMENTS / BLOCKS
-
 block returns [Scope scope]
     :   '{' blockStatement* '}'
     ;
+
 //blockStatement: localVar Declaration statement, or other statement
 blockStatement
     :   localVariableDeclarationStatement
@@ -102,14 +103,14 @@ localVariableDeclaration
     ;
 //statement
 statement
-    :   block #blockStat
+    :   block                                                                        #blockStat
     |   'if' ifCond = parExpression ifStat = statement ('else' elseStat= statement)? #ifStat
-    |   'while' whileCond = parExpression whileBlock = statement #whileStat
-    |   'return' retExp = expression? ';' #returnStat
-    |   ';' #emptyStat
-    |   'printf(' StringLiteral (',' expressionList )? ')' ';' #printStat
-    |   statementExpression ';' #statExpr
-    |   left = expression '=' right = expression ';' #assignStat
+    |   'while' whileCond = parExpression whileBlock = statement                     #whileStat
+    |   'return' retExp = expression? ';'                                            #returnStat
+    |   ';'                                                                          #emptyStat
+    |   'printf(' StringLiteral (',' expressionList )? ')' ';'                       #printStat
+    |   statementExpression ';'                                                      #exprStat
+    |   left = expression '=' right = expression ';'                                 #assignStat
     ;
 
 // EXPRESSIONS
@@ -123,54 +124,29 @@ statementExpression
     :   expression
     ;
 
-    /* you don't have to change this, but I find it more convenient to put everything in one
-     rule with alternative labels:
-
-     expression returns [Type type]
-         :   expression '.' ID                                   # FieldRef
-         |   expression '.' ID '(' expressionList? ')'           # QMethodCall
-         |   'new' ID '(' ')'                                    # CtorCall
-         |   ID '(' expressionList? ')'                          # MethodCall
-         |   '(' expression ')'                                  # Parens
-         |   'this'                                              # ThisRef
-         |   INT                                                 # LiteralRef
-         |   FLOAT                                               # LiteralRef
-         |   ID                                                  # IdRef
-         |   'null'                                              # NullRef
-         ;
-*/
-
 //expression
 expression returns [Type expressionType]
-    :   primary #primaryExpr
-    |   expression '.' dotID = Identifier #dotExpr
-    |   expression '(' expressionList? ')' #methodCalExpr
-    |   'new' creator #newExpr
+    :   expression '.' dotID = Identifier           #dotExpr
+    |   expression '(' expressionList? ')'          #methodCalExpr
+    |   'new' creator                               #newExpr
+    |   IntegerLiteral                              #intLiteralExpr
+    |   FloatPointLiteral                           #floatLiteralExpr
+    |   StringLiteral                               #stringLiteralExpr
+    |   'this'                                      #thisExpr
+    |   Identifier                                  #identifierExpr
+    |   'null'                                      #nullExpr
     ;
-expressionList
+
+expressionList // for methodCallExpr
     :   expression (',' expression)*
     ;
 
-primary
-    :   'this'
-    |   literal
-    |   Identifier
-    ;
-
-creator
+creator // for newExpr
     : type '('')';
 
 
-// there is too much parsing so to speak in your listener so perhaps add alternative labels here
-literal
-    :   IntegerLiteral
-    |   FloatPointLiteral
-    |   StringLiteral
-    |   'null'
-    ;
-
 //LEXER
-// §3.9 Keywords
+//Keywords
 
 CLASS         : 'class';
 ELSE          : 'else';
@@ -186,7 +162,7 @@ WHILE         : 'while';
 
 
 
-// §3.10.1 Integer Literals
+// Integer Literals
 
 IntegerLiteral
     :   DecimalIntegerLiteral
@@ -220,13 +196,13 @@ NonZeroDigit
     ;
 
 
-// §3.10.2 Floating-Point Literals
+//Floating-Point Literals
 
 FloatPointLiteral
     :   IntegerLiteral '.' Digits
     ;
 
-// §3.10.5 String Literals
+//tring Literals
 StringLiteral
     :   '"' StringCharacters? '"'
     ;
@@ -239,14 +215,7 @@ StringCharacter
     :   ~["]  // how is that allowing one escape?
     ;
 
-
-// §3.10.7 The Null Literal
-
-NullLiteral
-    :   'null'
-    ;
-
-// §3.11 Separators
+//Separators
 
 LPAREN          : '(';
 RPAREN          : ')';
@@ -256,12 +225,12 @@ SEMI            : ';';
 COMMA           : ',';
 DOT             : '.';
 
-// §3.12 Operators
+//Operators
 
 ASSIGN          : '=';
 
 
-// §3.8 Identifiers (must appear after all keywords in the grammar)
+//Identifiers
 
 Identifier
     :   JavaLetter JavaLetterOrDigit*
@@ -269,13 +238,13 @@ Identifier
 
 fragment
 JavaLetter
-    :   [a-zA-Z$_] // these are the "java letters" below 0xFF
+    :   [a-zA-Z$_]
     | '_'
     ;
 
 fragment
 JavaLetterOrDigit
-    :   [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
+    :   [a-zA-Z0-9$_]
     |   '_';
 
 

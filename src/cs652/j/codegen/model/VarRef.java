@@ -7,6 +7,7 @@ import org.antlr.symbols.VariableSymbol;
  */
 public class VarRef extends Expr{
     public String varRef;
+    public VarRef(){}
     public VarRef(String varRef){
         this.varRef = varRef;
     }
